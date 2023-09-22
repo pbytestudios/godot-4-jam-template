@@ -1,0 +1,9 @@
+# Godot-specific ignores
+**/.godot/
+
+#vscode
+**/.vscode/
+
+# Other stuff
+project/test_stuff/*
+*.tmp
