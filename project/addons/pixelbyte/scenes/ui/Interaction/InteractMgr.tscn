@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://daanih1n6f0na"]
+
+[ext_resource type="Script" path="res://addons/pixelbyte/scenes/ui/Interaction/InteractMgr.gd" id="1_8xigi"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_olaup"]
+
+[node name="InteractMgr" type="Node2D" node_paths=PackedStringArray("interact_label")]
+script = ExtResource("1_8xigi")
+interact_label = NodePath("Label")
+prefix_text = "[E] to "
+
+[node name="Label" type="Label" parent="."]
+z_index = 50
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -47.5
+offset_top = -26.0
+offset_right = 47.5
+grow_horizontal = 2
+grow_vertical = 0
+text = "InteractText"
+label_settings = SubResource("LabelSettings_olaup")
+horizontal_alignment = 1
+vertical_alignment = 1
