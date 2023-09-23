@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://daanih1n6f0na"]
 
-[ext_resource type="Script" path="res://addons/pixelbyte/scenes/ui/Interaction/InteractMgr.gd" id="1_8xigi"]
+[ext_resource type="Script" path="res://addons/pixelbyte/ui/Interaction/InteractMgr.gd" id="1_8xigi"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_olaup"]
 

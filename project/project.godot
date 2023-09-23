@@ -12,13 +12,7 @@ config_version=5
 
 config/name="LDPrep"
 config/features=PackedStringArray("4.1", "Mobile")
-config/icon="res://test_stuff/icon.svg"
-
-[autoload]
-
-Wiper="*res://addons/pixelbyte/scenes/wiper.tscn"
-InteractMgr="*res://addons/pixelbyte/scenes/ui/Interaction/InteractMgr.tscn"
-SpeechBox="*res://test_stuff/SpeechBox.tscn"
+boot_splash/show_image=false
 
 [debug]
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dl5aybjat62wr"]
 
-[ext_resource type="Script" path="res://addons/pixelbyte/scenes/ui/Interaction/Interactable.gd" id="1_y1it4"]
+[ext_resource type="Script" path="res://addons/pixelbyte/ui/Interaction/Interactable.gd" id="1_y1it4"]
 
 [node name="Interactable" type="Area2D"]
 collision_layer = 0

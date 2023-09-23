@@ -1,0 +1,132 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5kgexy2oxhl7"]
+
+[ext_resource type="Script" path="res://addons/pixelbyte/ui/settings/SettingsPanel.gd" id="4"]
+
+[node name="SettingsPanel" type="PanelContainer" node_paths=PackedStringArray("title_label", "button_holder")]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -118.0
+offset_bottom = 118.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+script = ExtResource("4")
+title_label = NodePath("MC/Controls/Title")
+button_holder = NodePath("MC/Controls/ButtonContainer")
+button_size = Vector2(40, 30)
+
+[node name="MC" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Controls" type="VBoxContainer" parent="MC"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Title" type="Label" parent="MC/Controls"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 28
+text = "Settings"
+
+[node name="MasterGroup" type="HBoxContainer" parent="MC/Controls"]
+layout_mode = 2
+
+[node name="UIName" type="Label" parent="MC/Controls/MasterGroup"]
+layout_mode = 2
+text = "Master:"
+
+[node name="MasterSlider" type="HSlider" parent="MC/Controls/MasterGroup"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = -24.0
+max_value = 80.0
+value = 80.0
+
+[node name="Value" type="Label" parent="MC/Controls/MasterGroup"]
+layout_mode = 2
+text = "100%"
+
+[node name="SfxGroup" type="HBoxContainer" parent="MC/Controls"]
+layout_mode = 2
+
+[node name="UIName" type="Label" parent="MC/Controls/SfxGroup"]
+layout_mode = 2
+text = "Sfx:"
+
+[node name="SfxSlider" type="HSlider" parent="MC/Controls/SfxGroup"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+value = 100.0
+
+[node name="Value" type="Label" parent="MC/Controls/SfxGroup"]
+layout_mode = 2
+text = "100%"
+
+[node name="AmbientGroup" type="HBoxContainer" parent="MC/Controls"]
+layout_mode = 2
+
+[node name="UIName" type="Label" parent="MC/Controls/AmbientGroup"]
+layout_mode = 2
+text = "Ambient:"
+
+[node name="AmbientSlider" type="HSlider" parent="MC/Controls/AmbientGroup"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+value = 100.0
+
+[node name="Value" type="Label" parent="MC/Controls/AmbientGroup"]
+layout_mode = 2
+text = "100%"
+
+[node name="MusicGroup" type="HBoxContainer" parent="MC/Controls"]
+layout_mode = 2
+
+[node name="UIName" type="Label" parent="MC/Controls/MusicGroup"]
+layout_mode = 2
+text = "Music:"
+
+[node name="MusicSlider" type="HSlider" parent="MC/Controls/MusicGroup"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+value = 100.0
+
+[node name="Value" type="Label" parent="MC/Controls/MusicGroup"]
+layout_mode = 2
+text = "100%"
+
+[node name="CheckBoxContainer" type="HBoxContainer" parent="MC/Controls"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="FullscreenCheck" type="CheckBox" parent="MC/Controls/CheckBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Fullscreen"
+flat = true
+
+[node name="ButtonContainer" type="HBoxContainer" parent="MC/Controls"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Button" type="Button" parent="MC/Controls/ButtonContainer"]
+layout_mode = 2
+text = "Ok"
+
+[node name="Cancel" type="Button" parent="MC/Controls/ButtonContainer"]
+layout_mode = 2
+text = "Cancel"
