@@ -66,6 +66,13 @@ func wipe():
 	await anim.animation_finished
 	wiped.emit()
 
+func wipe_immediate():
+	if anim.is_playing():
+		anim.stop()
+	
+	wipe_rect.mouse_filter = Control.MOUSE_FILTER_STOP
+	$WipeRect.material.set_shader_parameter("dissolve_value", 1.0)
+
 # unwipes the screen
 # awaitable: await unwipe()
 func unwipe():

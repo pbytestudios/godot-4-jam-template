@@ -14,6 +14,10 @@ config/name="LDPrep"
 config/features=PackedStringArray("4.1", "Mobile")
 boot_splash/show_image=false
 
+[autoload]
+
+Wiper="*res://addons/pixelbyte/ui/wiper.tscn"
+
 [debug]
 
 gdscript/warnings/unused_parameter=0
