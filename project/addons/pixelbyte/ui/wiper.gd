@@ -54,6 +54,9 @@ func _ready() -> void:
 	wipe_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	has_unwipe_anim = anim.has_animation("unwipe")
 	wipe_texture = default_wipe_texture
+	
+	if default_wipe_texture == null:
+		printerr("No default wipe texture selected. Be sure to set 'wipe_texture'!")
 
 # wipes the screen
 # awaitable: await wipe()

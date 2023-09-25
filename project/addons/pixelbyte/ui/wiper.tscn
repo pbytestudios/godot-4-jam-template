@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://ch2tv5qhankyn"]
 
 [ext_resource type="Script" path="res://addons/pixelbyte/ui/wiper.gd" id="1_wjie8"]
-[ext_resource type="Texture2D" uid="uid://u6hjb701562s" path="res://test_stuff/gfx/Spokes 8 - 128x128.png" id="2_hh6y3"]
+[ext_resource type="Texture2D" uid="uid://u6hjb701562s" path="res://addons/pixelbyte/ui/default_wipe.png" id="2_ah3uw"]
 [ext_resource type="Shader" path="res://addons/pixelbyte/shaders/alpha_wipe.gdshader" id="3_xxai8"]
 
 [sub_resource type="Animation" id="Animation_iqedk"]
@@ -49,7 +49,7 @@ layer = 100
 script = ExtResource("1_wjie8")
 anim = NodePath("AnimPlayer")
 wipe_rect = NodePath("WipeRect")
-default_wipe_texture = ExtResource("2_hh6y3")
+default_wipe_texture = ExtResource("2_ah3uw")
 
 [node name="AnimPlayer" type="AnimationPlayer" parent="."]
 libraries = {
