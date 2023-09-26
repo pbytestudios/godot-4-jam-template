@@ -24,7 +24,7 @@ func register(area:Interactable):
 
 func unregister(area:Interactable):
 	_active_areas.erase(area)
-	
+
 func _process(delta: float) -> void:
 	if _active_areas.size() == 0 || !_can_interact:
 		interact_label.hide()
