@@ -91,11 +91,18 @@ func unwipe():
 	wipe_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	unwiped.emit()
 
-# wipes loads another scene, then unwopes
+# wipes loads another scene, then un-wipes
 # awaitable: await wipe_to_scene()
 func wipe_to_scene(scene_path:String, delay:float = 0):
 	await wipe()
 	Scene.change(get_tree(), scene_path)
+	if delay > 0:
+		await get_tree().create_timer(delay).timeout
+	await unwipe()
+
+func wipe_to_packed(scene:PackedScene, delay: float = 0):
+	await wipe()
+	Scene.change_packed(get_tree(), scene)
 	if delay > 0:
 		await get_tree().create_timer(delay).timeout
 	await unwipe()

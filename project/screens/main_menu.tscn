@@ -1,0 +1,112 @@
+[gd_scene load_steps=3 format=3 uid="uid://cawl5krs8qel6"]
+
+[ext_resource type="Script" path="res://screens/main_menu.gd" id="1_jusar"]
+[ext_resource type="PackedScene" uid="uid://c5kgexy2oxhl7" path="res://addons/pixelbyte/ui/settings/SettingsPanel.tscn" id="2_qg155"]
+
+[node name="MainMenu" type="Node2D"]
+script = ExtResource("1_jusar")
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="TextureRect" type="TextureRect" parent="Ui"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+
+[node name="ColorRect2" type="ColorRect" parent="Ui"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.654902, 0.639216, 0.427451, 1)
+
+[node name="MainMenuContainer" type="PanelContainer" parent="Ui"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -143.0
+offset_top = -143.0
+offset_right = 144.0
+offset_bottom = 145.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="Ui/MainMenuContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Ui/MainMenuContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="Ui/MainMenuContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 40
+text = "Game Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Play" type="Button" parent="Ui/MainMenuContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 30
+text = "Play
+"
+
+[node name="Continue" type="Button" parent="Ui/MainMenuContainer/MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 30
+text = "Continue
+"
+
+[node name="Settings" type="Button" parent="Ui/MainMenuContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 30
+text = "Settings
+"
+
+[node name="Exit" type="Button" parent="Ui/MainMenuContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 30
+text = "Quit"
+
+[node name="ColorRect" type="ColorRect" parent="Ui"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.623529)
+
+[node name="SettingsPanel" parent="Ui" node_paths=PackedStringArray("veil") instance=ExtResource("2_qg155")]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -272.0
+offset_top = -117.0
+offset_right = 272.0
+offset_bottom = 117.0
+veil = NodePath("../ColorRect")
+
+[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="." method="_on_play"]
+[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Settings" to="." method="_on_settings"]
+[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Exit" to="." method="_on_exit"]

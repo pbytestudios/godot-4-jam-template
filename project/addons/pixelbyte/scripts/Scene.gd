@@ -13,4 +13,8 @@ static func load_into(container:Node, scene_path:String) -> Node:
 
 static func reload(tree:SceneTree) -> Error: return tree.reload_current_scene()
 
-static func change(tree:SceneTree, scene_path:String) -> Error: return tree.change_scene_to_file(scene_path)
+static func change(tree:SceneTree, scene_path:String) -> Error: 
+	return tree.change_scene_to_file(scene_path)
+
+static func change_packed(tree:SceneTree, new_scene:PackedScene)-> Error: 
+	return tree.change_scene_to_packed(new_scene)

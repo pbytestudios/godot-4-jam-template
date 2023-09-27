@@ -20,9 +20,9 @@ button_size = Vector2(40, 30)
 
 [node name="MC" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 5
+theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
+theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 5
 
 [node name="Controls" type="VBoxContainer" parent="MC"]
@@ -35,7 +35,7 @@ alignment = 1
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 1
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 40
 text = "Settings"
 
 [node name="MasterGroup" type="HBoxContainer" parent="MC/Controls"]

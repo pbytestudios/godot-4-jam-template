@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="LDPrep"
+run/main_scene="res://screens/main_menu.tscn"
 config/features=PackedStringArray("4.1", "Mobile")
 boot_splash/show_image=false
 
@@ -26,8 +27,11 @@ gdscript/warnings/unused_parameter=0
 
 [display]
 
-window/stretch/mode="canvas_items"
-window/stretch/aspect="keep_height"
+window/size/viewport_width=640
+window/size/viewport_height=360
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="viewport"
 
 [input]
 
