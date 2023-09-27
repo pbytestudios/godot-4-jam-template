@@ -3,8 +3,9 @@
 [ext_resource type="Script" path="res://screens/main_menu.gd" id="1_jusar"]
 [ext_resource type="PackedScene" uid="uid://c5kgexy2oxhl7" path="res://addons/pixelbyte/ui/settings/SettingsPanel.tscn" id="2_qg155"]
 
-[node name="MainMenu" type="Node2D"]
+[node name="MainMenu" type="Node2D" node_paths=PackedStringArray("title_label")]
 script = ExtResource("1_jusar")
+title_label = NodePath("Ui/MainMenuContainer/MarginContainer/VBoxContainer/Title")
 
 [node name="Ui" type="CanvasLayer" parent="."]
 
@@ -55,7 +56,7 @@ theme_override_constants/separation = 16
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 40
-text = "Game Name"
+text = "Jam Template"
 horizontal_alignment = 1
 vertical_alignment = 1
 

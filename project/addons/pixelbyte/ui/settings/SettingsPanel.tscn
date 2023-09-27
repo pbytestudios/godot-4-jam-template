@@ -7,7 +7,7 @@ anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_top = -118.0
+offset_top = -116.0
 offset_bottom = 118.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -34,12 +34,13 @@ alignment = 1
 [node name="Title" type="Label" parent="MC/Controls"]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 1
+size_flags_vertical = 3
 theme_override_font_sizes/font_size = 40
 text = "Settings"
 
 [node name="MasterGroup" type="HBoxContainer" parent="MC/Controls"]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="UIName" type="Label" parent="MC/Controls/MasterGroup"]
 layout_mode = 2
@@ -59,6 +60,7 @@ text = "100%"
 
 [node name="SfxGroup" type="HBoxContainer" parent="MC/Controls"]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="UIName" type="Label" parent="MC/Controls/SfxGroup"]
 layout_mode = 2
@@ -76,6 +78,7 @@ text = "100%"
 
 [node name="AmbientGroup" type="HBoxContainer" parent="MC/Controls"]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="UIName" type="Label" parent="MC/Controls/AmbientGroup"]
 layout_mode = 2
@@ -93,6 +96,7 @@ text = "100%"
 
 [node name="MusicGroup" type="HBoxContainer" parent="MC/Controls"]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="UIName" type="Label" parent="MC/Controls/MusicGroup"]
 layout_mode = 2
@@ -111,6 +115,7 @@ text = "100%"
 [node name="CheckBoxContainer" type="HBoxContainer" parent="MC/Controls"]
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 3
 
 [node name="FullscreenCheck" type="CheckBox" parent="MC/Controls/CheckBoxContainer"]
 layout_mode = 2
@@ -121,7 +126,7 @@ flat = true
 [node name="ButtonContainer" type="HBoxContainer" parent="MC/Controls"]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 4
+size_flags_vertical = 3
 
 [node name="Button" type="Button" parent="MC/Controls/ButtonContainer"]
 layout_mode = 2

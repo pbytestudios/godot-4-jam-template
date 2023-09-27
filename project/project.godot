@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="LDPrep"
+config/name="Jam Template"
 run/main_scene="res://screens/main_menu.tscn"
 config/features=PackedStringArray("4.1", "Mobile")
 boot_splash/show_image=false
@@ -18,7 +18,7 @@ boot_splash/show_image=false
 [autoload]
 
 Wiper="*res://addons/pixelbyte/ui/wiper.tscn"
-SpeechBox="*res://test_stuff/SpeechBox.tscn"
+SpeechBox="*res://test_stuff/scenes/SpeechBox.tscn"
 InteractMgr="*res://addons/pixelbyte/ui/Interaction/InteractMgr.tscn"
 
 [debug]

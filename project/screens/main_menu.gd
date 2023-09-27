@@ -1,15 +1,23 @@
+@tool
 extends Node2D
 
 @export var game_scene:PackedScene
+@export var title_label: Label
 
 func _ready():
-	Wiper.wipe_speed = 0.5
-	Wiper.wipe_immediate()
-	await Wiper.unwipe()
+	if !Engine.is_editor_hint():
+		Wiper.wipe_speed = 0.5
+		Wiper.wipe_immediate()
+		await Wiper.unwipe()
 	
 	if OS.get_name() == "HTML5":
 		$Ui/PanelContainer/MarginContainer/VBoxContainer/Exit.visible = false
-	
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_EDITOR_PRE_SAVE:
+		if title_label != null:
+			title_label.text = ProjectSettings.get_setting("application/config/name")
+			
 func disable_buttons():
 	$Ui/MainMenuContainer.process_mode = Node.PROCESS_MODE_DISABLED
 	
