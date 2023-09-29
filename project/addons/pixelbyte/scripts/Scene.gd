@@ -4,7 +4,7 @@ class_name Scene
 static func load_into(container:Node, scene_path:String) -> Node:
 	var scn : PackedScene = load(scene_path)
 	if scn == null:
-		printerr("Enable to find scene: '%s'!" % scene_path)
+		printerr("Unable to find scene: '%s'!" % scene_path)
 		return null
 	
 	var inst = scn.instantiate()
