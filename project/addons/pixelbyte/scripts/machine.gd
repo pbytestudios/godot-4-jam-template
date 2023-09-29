@@ -13,10 +13,16 @@ var current_state_name:StringName:
 var stopped:bool = true:
 	get: return stopped
 
+# true when the machine is changing to another state
+# set to false AFTER the new state's enter method is called
+var changing_states:bool:
+	get: return changing_states
+
 var current_state_functions:Dictionary = {}
 var current_update:Callable
 
-signal _awaited
+# emitted AFTER the new state's enter method has been called
+signal changed_state
 
 # function naming: the 'enter' callable will be used to name the state
 func add(enter:Callable, update:Callable = Callable(), exit:Callable = Callable()):
@@ -36,11 +42,11 @@ func add(enter:Callable, update:Callable = Callable(), exit:Callable = Callable(
 func stop():
 	stopped = true
 	current_state_name = ""
-	await _change_state({})
+	_change_state({})
 
 func start(starting:Callable):
 	stopped = false
-	await change(starting, true)
+	change(starting, true)
 
 #
 # When calling change, you can use any callable that has the state name with the format
@@ -56,6 +62,7 @@ func change(to:Callable, immediate:bool = false):
 		printerr("Cannot find state: %s!" % to)
 		return
 	
+	changing_states = true
 	current_state_name = slices[0]
 	
 	if immediate:
@@ -71,10 +78,13 @@ func _change_state(state_funcs:Dictionary):
 	current_update = Callable()
 		
 	current_state_functions = state_funcs
-
+	
 	#call the new state's enter if there is one
 	if state_funcs.has("enter") && !state_funcs["enter"].is_null():
 		await state_funcs["enter"].call()
+
+	changing_states = false
+	changed_state.emit()
 		
 	#setup the update and physics functions if they exist
 	if state_funcs.has("update") && !stopped:
