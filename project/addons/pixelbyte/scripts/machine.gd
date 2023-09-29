@@ -1,8 +1,9 @@
 extends RefCounted
 class_name Machine
 
-# a state machine using Callables
 # 2023 Pixelbyte Studios
+# a state machine using Callables
+# this allows all states ot be contained within 1 script
 
 # this holds all the states and their functions
 var state_map = {}
