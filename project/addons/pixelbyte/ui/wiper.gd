@@ -5,6 +5,13 @@ signal wiped
 # emitted when the screen is fully "unwiped" i.e. you can see the screen
 signal unwiped
 
+var is_wiped:bool:
+	get: return $WipeRect.material.get_shader_parameter("dissolve_value") == 1.0
+
+# true when the wiper is wiping
+var wiping:bool:
+	get: return wiping
+
 #animation player that contains the "wipe" (and optionally "unwipe") animation
 @export var anim:AnimationPlayer
 #The ColorRect on which to operate
@@ -61,12 +68,17 @@ func _ready() -> void:
 # wipes the screen
 # awaitable: await wipe()
 func wipe():
+	wiping = true
 	if anim.is_playing():
-		anim.stop()
+		if anim.current_animation == "unwipe":
+			anim.stop()
 	
 	wipe_rect.mouse_filter = Control.MOUSE_FILTER_STOP
-	anim.play("wipe")
+	if !anim.is_playing() or anim.current_animation != "wipe":
+		anim.play("wipe")
+	$Transition.play_rnd()
 	await anim.animation_finished
+	wiping = false
 	wiped.emit()
 
 func wipe_immediate():
@@ -79,6 +91,7 @@ func wipe_immediate():
 # unwipes the screen
 # awaitable: await unwipe()
 func unwipe():
+	wiping = true
 	if anim.is_playing():
 		anim.stop()
 	
@@ -86,23 +99,28 @@ func unwipe():
 		anim.play("unwipe")
 	else:
 		anim.play_backwards("wipe")
+	$Transition.play_rnd()
 	await anim.animation_finished
 	
 	wipe_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wiping = false
 	unwiped.emit()
 
 # wipes loads another scene, then un-wipes
 # awaitable: await wipe_to_scene()
-func wipe_to_scene(scene_path:String, delay:float = 0):
+func wipe_to_scene(scene_path:String, delay:float = 0, _unwipe:bool = true):
 	await wipe()
 	Scene.change(get_tree(), scene_path)
-	if delay > 0:
-		await get_tree().create_timer(delay).timeout
-	await unwipe()
+	
+	if _unwipe:
+		if delay > 0:
+			await get_tree().create_timer(delay).timeout
+		await unwipe()
 
-func wipe_to_packed(scene:PackedScene, delay: float = 0):
+func wipe_to_packed(scene:PackedScene, delay: float = 0, _unwipe:bool = true):
 	await wipe()
 	Scene.change_packed(get_tree(), scene)
-	if delay > 0:
-		await get_tree().create_timer(delay).timeout
-	await unwipe()
+	if _unwipe:
+		if delay > 0:
+			await get_tree().create_timer(delay).timeout
+		await unwipe()

@@ -45,6 +45,7 @@ shader_parameter/dissolve_value = 0.0
 shader_parameter/wipe_color = null
 
 [node name="Wiper" type="CanvasLayer" node_paths=PackedStringArray("anim", "wipe_rect")]
+process_mode = 3
 layer = 100
 script = ExtResource("1_wjie8")
 anim = NodePath("AnimPlayer")

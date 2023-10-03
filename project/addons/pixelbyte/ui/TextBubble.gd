@@ -25,7 +25,7 @@ enum XAlign {Left, Middle, Right}
 # optional: if you have a tail for a speech box, put it here
 @export var tail:Control
 # optional: Holds a type sound that we will play if valid
-@export var type_sound:AudioStreamPlayer
+@export var type_sound:Sounder
 
 # Once the dialog is showing, you can await
 signal skip_pressed
@@ -161,13 +161,15 @@ func _type_text():
 			_:
 				timer.start(letter_time)
 		
-		if type_sound != null:
+		if type_sound != null && type_sound.sounds.size() > 0:
 			if parsed_text[count] in ["a","e","i","o","u"]:
-				type_sound.pitch_scale = randf_range(1.1, 1.4)
+				type_sound.random_pitch_min = 0.1
+				type_sound.random_pitch_max = 0.4
 			else:
-				type_sound.pitch_scale = randf_range(0.9, 1.1)
-			type_sound.play()
-			await  type_sound.finished
+				type_sound.random_pitch_min = -0.1
+				type_sound.random_pitch_max = 0.1
+			type_sound.play_rnd()
+#			await  type_sound.finished
 		
 		if count < num_chars -1:
 			await timer.timeout
@@ -188,7 +190,7 @@ func _set_box_alignment():
 			global_position.y = dlg_pos.y - size.y / 2
 		YAlign.Bottom:
 			pivot_offset.y = size.y
-			if tail != null:
+			if tail != null && tail.visible:
 				global_position.y = dlg_pos.y - size.y - tail.size.y
 			else:
 				global_position.y = dlg_pos.y - size.y

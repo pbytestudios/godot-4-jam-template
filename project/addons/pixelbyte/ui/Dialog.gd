@@ -10,14 +10,12 @@ extends PanelContainer
 @export var button_holder:Container
 @export var button_size:Vector2 = Vector2(100,50)
 @export var veil:Control
+@export var animator:AnimationPlayer
 
 signal mouse_entered_button
 signal button_clicked
 
 var focus_index: int = -1
-
-var speed_scale: float:
-	set(val): speed_scale = val
 
 var result:String:
 	get: return result
@@ -70,7 +68,6 @@ func _add_button(text:String) -> Button:
 func _button_pressed(btn:Button):
 	result = btn.text
 	button_clicked.emit()
-	visible = false
 	hide_dlg()
 	
 func remove_all_buttons():
@@ -109,12 +106,10 @@ func show_dlg() -> void:
 		_add_button("Ok")
 		focus_index = 0
 		
-	if has_node("Anim"):
-		get_node("Anim").playback_speed = speed_scale
-		get_node("Anim").play("Pop")
+	if animator != null && animator.has_animation("in"):
+		animator.play("in")
 	show()
 	_focus_button(focus_index)
-	await hidden
 
 # awaitable
 func inform(message:String, _title:String):
@@ -148,22 +143,23 @@ func _unhandled_input(event):
 #override this to do something 'special' when 'escape_closes = true' and the escape key is pressed
 func _closed_with_escape(): pass
 
-func hide_dlg(closed_with_esc: bool = false):
-	if veil != null:
-		veil.visible = false
-		
+func hide_dlg(closed_with_esc: bool = false):	
 	if !visible:
 		result = ""
 		return
 		
-	if has_node("Anim"):
-		var anim:AnimationPlayer = get_node("Anim")
-		anim.playback_speed = speed_scale
-		anim.play_backwards("Pop")
-		await anim.animation_finished
+	if animator != null && animator.has_animation("out"):
+		animator.play("out")
+		await animator.animation_finished
 
+	if veil != null:
+		veil.visible = false
+
+	hide()		
 	if closed_with_esc:
 		_closed_with_escape()
+		
+
 
 func set_buttons(button_names:Array[String], focus:int = -1):
 	if button_names == null or button_names.size() == 0:
