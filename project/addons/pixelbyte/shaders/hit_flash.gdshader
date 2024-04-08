@@ -4,7 +4,7 @@ uniform bool on = false;
 uniform float flash_frequency = 10;
 uniform vec4 color : source_color = vec4(1,1,1,1);
 
-void fragment() 
+void fragment()
 {
 	if(on){
 		vec4 hit_color = color * COLOR.a;

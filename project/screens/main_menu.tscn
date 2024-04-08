@@ -24,7 +24,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.654902, 0.639216, 0.427451, 1)
+color = Color(0.427451, 0.441667, 0.654902, 1)
 
 [node name="MainMenuContainer" type="PanelContainer" parent="Ui"]
 anchors_preset = 8
@@ -97,7 +97,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.623529)
 
-[node name="SettingsPanel" parent="Ui" node_paths=PackedStringArray("veil") instance=ExtResource("2_qg155")]
+[node name="SettingsPanel" parent="Ui" node_paths=PackedStringArray("title_label", "button_holder", "veil") instance=ExtResource("2_qg155")]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -106,6 +106,8 @@ offset_left = -272.0
 offset_top = -117.0
 offset_right = 272.0
 offset_bottom = 117.0
+title_label = NodePath("MC/Controls/Title")
+button_holder = NodePath("MC/Controls/ButtonContainer")
 veil = NodePath("../ColorRect")
 
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="." method="_on_play"]

@@ -8,8 +8,9 @@ extends PanelContainer
 @export var msg_label:Label
 
 @export var button_holder:Container
-@export var button_size:Vector2 = Vector2(100,50)
 @export var veil:Control
+@export var button_size:Vector2 = Vector2(100,50)
+
 @export var animator:AnimationPlayer
 
 signal mouse_entered_button

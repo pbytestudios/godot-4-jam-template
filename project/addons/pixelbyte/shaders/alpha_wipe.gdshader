@@ -7,8 +7,8 @@ uniform vec4 wipe_color : source_color;
 void fragment() {
 	vec4 texColor = texture(TEXTURE, UV);
 	vec4 dissolve_color = texture(wipe_texture, UV);
-	float mask = (dissolve_color.r + dissolve_color.g +dissolve_color.b + dissolve_color.a) / 4.0;
-	
+	float mask = 1.0 - (dissolve_color.r + dissolve_color.g + dissolve_color.b + dissolve_color.a) / 4.0;
+
 	if (mask > dissolve_value) {
 		COLOR.rgba = vec4(texColor.rgb, 0.0);
 	}
