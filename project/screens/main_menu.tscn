@@ -1,11 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://cawl5krs8qel6"]
+[gd_scene load_steps=4 format=3 uid="uid://cawl5krs8qel6"]
 
 [ext_resource type="Script" path="res://screens/main_menu.gd" id="1_jusar"]
 [ext_resource type="PackedScene" uid="uid://c5kgexy2oxhl7" path="res://addons/pixelbyte/ui/settings/SettingsPanel.tscn" id="2_qg155"]
+[ext_resource type="Script" path="res://addons/pixelbyte/node_lib/scripts/PixelCam2D.gd" id="3_pp7n8"]
 
-[node name="MainMenu" type="Node2D" node_paths=PackedStringArray("title_label")]
+[node name="MainMenu" type="Node2D"]
 script = ExtResource("1_jusar")
-title_label = NodePath("Ui/MainMenuContainer/MarginContainer/VBoxContainer/Title")
 
 [node name="Ui" type="CanvasLayer" parent="."]
 
@@ -27,16 +27,14 @@ grow_vertical = 2
 color = Color(0.427451, 0.441667, 0.654902, 1)
 
 [node name="MainMenuContainer" type="PanelContainer" parent="Ui"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -143.0
-offset_top = -143.0
-offset_right = 144.0
-offset_bottom = 145.0
-grow_horizontal = 2
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -214.0
+offset_top = 38.0
+offset_bottom = -37.0
+grow_horizontal = 0
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -56,7 +54,7 @@ theme_override_constants/separation = 16
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 40
-text = "Jam Template"
+text = "Menu"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -109,6 +107,10 @@ offset_bottom = 117.0
 title_label = NodePath("MC/Controls/Title")
 button_holder = NodePath("MC/Controls/ButtonContainer")
 veil = NodePath("../ColorRect")
+
+[node name="PixelCam2D" type="Camera2D" parent="Ui"]
+anchor_mode = 0
+script = ExtResource("3_pp7n8")
 
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="." method="_on_play"]
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Settings" to="." method="_on_settings"]

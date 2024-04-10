@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://ch2tv5qhankyn"]
+[gd_scene load_steps=9 format=3 uid="uid://ch2tv5qhankyn"]
 
 [ext_resource type="Script" path="res://addons/pixelbyte/ui/wiper.gd" id="1_wjie8"]
-[ext_resource type="Texture2D" uid="uid://u6hjb701562s" path="res://addons/pixelbyte/ui/default_wipe.png" id="2_ah3uw"]
+[ext_resource type="Texture2D" uid="uid://epcxoa2qnd4d" path="res://gfx/gradients/Vertical_1-256x256.png" id="2_fkkrj"]
 [ext_resource type="Shader" path="res://addons/pixelbyte/shaders/alpha_wipe.gdshader" id="3_xxai8"]
+[ext_resource type="Script" path="res://addons/pixelbyte/node_lib/scripts/Sounder.gd" id="4_74ent"]
 
 [sub_resource type="Animation" id="Animation_iqedk"]
 tracks/0/type = "value"
@@ -44,13 +45,14 @@ shader = ExtResource("3_xxai8")
 shader_parameter/dissolve_value = 0.0
 shader_parameter/wipe_color = null
 
-[node name="Wiper" type="CanvasLayer" node_paths=PackedStringArray("anim", "wipe_rect")]
+[node name="Wiper" type="CanvasLayer" node_paths=PackedStringArray("anim", "wipe_rect", "wipe_sound")]
 process_mode = 3
 layer = 100
 script = ExtResource("1_wjie8")
 anim = NodePath("AnimPlayer")
 wipe_rect = NodePath("WipeRect")
-default_wipe_texture = ExtResource("2_ah3uw")
+wipe_sound = NodePath("WipeSound")
+default_wipe_texture = ExtResource("2_fkkrj")
 
 [node name="AnimPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -66,3 +68,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
+
+[node name="WipeSound" type="AudioStreamPlayer" parent="."]
+bus = &"Sfx"
+script = ExtResource("4_74ent")

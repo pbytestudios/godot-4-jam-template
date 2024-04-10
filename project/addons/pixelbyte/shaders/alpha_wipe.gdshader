@@ -9,7 +9,7 @@ void fragment() {
 	vec4 dissolve_color = texture(wipe_texture, UV);
 	float mask = 1.0 - (dissolve_color.r + dissolve_color.g + dissolve_color.b + dissolve_color.a) / 4.0;
 
-	if (mask > dissolve_value) {
+	if (mask >= dissolve_value) {
 		COLOR.rgba = vec4(texColor.rgb, 0.0);
 	}
 	else {

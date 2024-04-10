@@ -12,11 +12,13 @@ var is_wiped:bool:
 var wiping:bool:
 	get: return wiping
 
-#animation player that contains the "wipe" (and optionally "unwipe") animation
+## animation player containing a "wipe" (and optionally an "unwipe") animation
 @export var anim:AnimationPlayer
-#The ColorRect on which to operate
+## The ColorRect on which to operate
 @export var wipe_rect:ColorRect
-#The texture to use in the shader for fading
+## An optional transition sound
+@export var wipe_sound:Sounder
+## The texture to use in the shader for fading
 @export var default_wipe_texture:Texture2D
 
 # sets the speed_scale on the animation player
@@ -27,7 +29,7 @@ var wiping:bool:
 var wipe_speed: float:
 	get: return 1 / anim.speed_scale
 	set(val): 
-		if val <= 0:
+		if is_zero_approx(val):
 			anim.speed_scale = 1 / 0.01
 		else:
 			anim.speed_scale = 1 / val
@@ -76,7 +78,9 @@ func wipe():
 	wipe_rect.mouse_filter = Control.MOUSE_FILTER_STOP
 	if !anim.is_playing() or anim.current_animation != "wipe":
 		anim.play("wipe")
-	$Transition.play_rnd()
+		if wipe_sound:
+			wipe_sound.play_rnd()
+			
 	await anim.animation_finished
 	wiping = false
 	wiped.emit()
@@ -99,7 +103,10 @@ func unwipe():
 		anim.play("unwipe")
 	else:
 		anim.play_backwards("wipe")
-	$Transition.play_rnd()
+		
+	if wipe_sound:
+		wipe_sound.play_rnd()
+		
 	await anim.animation_finished
 	
 	wipe_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
