@@ -19,7 +19,9 @@ func _notification(what: int) -> void:
 			title_label.text = ProjectSettings.get_setting("application/config/name")
 			
 func disable_buttons():
-	$Ui/MainMenuContainer.process_mode = Node.PROCESS_MODE_DISABLED
+	for element in $Ui/MainMenuContainer/MarginContainer/VBoxContainer.get_children():
+		if element is Button:
+			element.disabled = true
 	
 func _on_play():
 	if game_scene != null:
@@ -37,5 +39,6 @@ func _on_settings():
 
 func _on_exit():
 	disable_buttons()
+	await get_tree().create_timer(0.25).timeout
 	await Wiper.wipe()
 	get_tree().quit()

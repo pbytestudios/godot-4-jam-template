@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cawl5krs8qel6"]
+[gd_scene load_steps=5 format=3 uid="uid://cawl5krs8qel6"]
 
 [ext_resource type="Script" path="res://screens/main_menu.gd" id="1_jusar"]
+[ext_resource type="Script" path="res://addons/pixelbyte/ui/ui_slider.gd" id="2_amggq"]
 [ext_resource type="PackedScene" uid="uid://c5kgexy2oxhl7" path="res://addons/pixelbyte/ui/settings/SettingsPanel.tscn" id="2_qg155"]
 [ext_resource type="Script" path="res://addons/pixelbyte/node_lib/scripts/PixelCam2D.gd" id="3_pp7n8"]
 
@@ -48,6 +49,7 @@ theme_override_constants/margin_bottom = 16
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Ui/MainMenuContainer/MarginContainer"]
 layout_mode = 2
+mouse_filter = 0
 theme_override_constants/separation = 16
 
 [node name="Title" type="Label" parent="Ui/MainMenuContainer/MarginContainer/VBoxContainer"]
@@ -86,6 +88,16 @@ size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
 text = "Quit"
 
+[node name="SlideIn" type="Node2D" parent="Ui/MainMenuContainer" node_paths=PackedStringArray("parent")]
+script = ExtResource("2_amggq")
+parent = NodePath("..")
+tween_time = 0.75
+tween_mode = 2
+tween_trans = 3
+
+[node name="Mark" type="Marker2D" parent="Ui/MainMenuContainer/SlideIn"]
+position = Vector2(429, 0)
+
 [node name="ColorRect" type="ColorRect" parent="Ui"]
 visible = false
 anchors_preset = 15
@@ -113,5 +125,7 @@ anchor_mode = 0
 script = ExtResource("3_pp7n8")
 
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="." method="_on_play"]
+[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="Ui/MainMenuContainer/SlideIn" method="tween_to_mark"]
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Settings" to="." method="_on_settings"]
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Exit" to="." method="_on_exit"]
+[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Exit" to="Ui/MainMenuContainer/SlideIn" method="tween_to_mark"]
