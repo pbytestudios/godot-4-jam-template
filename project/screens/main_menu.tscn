@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cawl5krs8qel6"]
 
 [ext_resource type="Script" path="res://screens/main_menu.gd" id="1_jusar"]
-[ext_resource type="Script" path="res://addons/pixelbyte/ui/ui_slider.gd" id="2_amggq"]
+[ext_resource type="Script" path="res://addons/pixelbyte/ui/ui_effects.gd" id="2_amggq"]
 [ext_resource type="PackedScene" uid="uid://c5kgexy2oxhl7" path="res://addons/pixelbyte/ui/settings/SettingsPanel.tscn" id="2_qg155"]
 [ext_resource type="Script" path="res://addons/pixelbyte/node_lib/scripts/PixelCam2D.gd" id="3_pp7n8"]
 
@@ -32,8 +32,9 @@ anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -214.0
+offset_left = -215.0
 offset_top = 38.0
+offset_right = -0.999878
 offset_bottom = -37.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -93,7 +94,6 @@ script = ExtResource("2_amggq")
 parent = NodePath("..")
 tween_time = 0.75
 tween_mode = 2
-tween_trans = 3
 
 [node name="Mark" type="Marker2D" parent="Ui/MainMenuContainer/SlideIn"]
 position = Vector2(429, 0)
@@ -125,7 +125,7 @@ anchor_mode = 0
 script = ExtResource("3_pp7n8")
 
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="." method="_on_play"]
-[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="Ui/MainMenuContainer/SlideIn" method="tween_to_mark"]
+[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="Ui/MainMenuContainer/SlideIn" method="reverse"]
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Settings" to="." method="_on_settings"]
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Exit" to="." method="_on_exit"]
-[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Exit" to="Ui/MainMenuContainer/SlideIn" method="tween_to_mark"]
+[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Exit" to="Ui/MainMenuContainer/SlideIn" method="reverse"]
