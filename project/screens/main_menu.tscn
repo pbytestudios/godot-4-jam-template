@@ -32,10 +32,10 @@ anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -215.0
-offset_top = 38.0
-offset_right = -0.999878
-offset_bottom = -37.0
+offset_left = -213.0
+offset_top = 39.0
+offset_right = 1.00037
+offset_bottom = -36.0
 grow_horizontal = 0
 grow_vertical = 2
 size_flags_horizontal = 4
@@ -89,15 +89,6 @@ size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
 text = "Quit"
 
-[node name="SlideIn" type="Node2D" parent="Ui/MainMenuContainer" node_paths=PackedStringArray("parent")]
-script = ExtResource("2_amggq")
-parent = NodePath("..")
-tween_time = 0.75
-tween_mode = 2
-
-[node name="Mark" type="Marker2D" parent="Ui/MainMenuContainer/SlideIn"]
-position = Vector2(429, 0)
-
 [node name="ColorRect" type="ColorRect" parent="Ui"]
 visible = false
 anchors_preset = 15
@@ -124,8 +115,26 @@ veil = NodePath("../ColorRect")
 anchor_mode = 0
 script = ExtResource("3_pp7n8")
 
+[node name="ControlEffects" type="Node2D" parent="Ui"]
+
+[node name="MainMenu" type="Node2D" parent="Ui/ControlEffects" node_paths=PackedStringArray("parent")]
+position = Vector2(425, 38)
+script = ExtResource("2_amggq")
+parent = NodePath("../../MainMenuContainer")
+tween_time = 0.75
+tween_mode = 2
+play_ease = 1
+reverse_ease = 0
+tween_trans = 3
+
+[node name="Mark" type="Marker2D" parent="Ui/ControlEffects/MainMenu"]
+position = Vector2(386, 1)
+
+[node name="Start" type="Marker2D" parent="Ui/ControlEffects/MainMenu"]
+position = Vector2(2, 1)
+
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="." method="_on_play"]
-[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="Ui/MainMenuContainer/SlideIn" method="reverse"]
+[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="Ui/ControlEffects/MainMenu" method="reverse"]
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Settings" to="." method="_on_settings"]
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Exit" to="." method="_on_exit"]
-[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Exit" to="Ui/MainMenuContainer/SlideIn" method="reverse"]
+[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Exit" to="Ui/ControlEffects/MainMenu" method="reverse"]
