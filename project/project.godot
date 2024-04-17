@@ -19,6 +19,7 @@ boot_splash/show_image=false
 
 Wiper="*res://addons/pixelbyte/ui/wiper.tscn"
 InteractMgr="*res://addons/pixelbyte/ui/Interaction/InteractMgr.tscn"
+Events="*res://scripts/autoloads/Events.gd"
 
 [debug]
 

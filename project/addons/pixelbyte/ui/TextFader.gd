@@ -72,9 +72,11 @@ func off(time:float = 0.5):
 	if time > 0:
 		state = Hiding
 		_tween = _make_tween(time, 0.0, Tween.EASE_IN)
-		await _tween.finished
-		_tween = null
-	_hide_it()
+		_tween.tween_callback(func(): 
+			_tween = null
+			_hide_it()
+			)
+	
 
 var _tween: Tween
 func _make_tween(time:float, final_alpha:float, ease_type:int) -> Tween:

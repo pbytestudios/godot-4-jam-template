@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://u6hjb701562s"
-path="res://.godot/imported/default_wipe.png-d2a55fc73cd8d1d8c7f9814dce1af32b.ctex"
+uid="uid://dpnwmyuk4lnjr"
+path="res://.godot/imported/Spokes_13-256x256.png-603fcb9919cbf53713deb1056a83b92f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/pixelbyte/ui/default_wipe.png"
-dest_files=["res://.godot/imported/default_wipe.png-d2a55fc73cd8d1d8c7f9814dce1af32b.ctex"]
+source_file="res://gfx/gradients/Spokes_13-256x256.png"
+dest_files=["res://.godot/imported/Spokes_13-256x256.png-603fcb9919cbf53713deb1056a83b92f.ctex"]
 
 [params]
 

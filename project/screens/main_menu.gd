@@ -5,7 +5,7 @@ extends Node2D
 
 func _ready():
 	if !Engine.is_editor_hint():
-		Wiper.wipe_speed = 0.5
+		#Wiper.wipe_speed = 0.5
 		Wiper.wipe_immediate()
 		await Wiper.unwipe()
 	

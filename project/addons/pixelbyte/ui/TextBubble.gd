@@ -52,7 +52,7 @@ func _ready():
 	clip_contents = !speech_bubble_mode
 	msg.fit_content = true
 	set_wrap_mode()
-	
+	Events.say.connect(say)
 #	call_deferred("show_line", "Hello there my name is not all that important so ask if you need it.")
 #	show_lines(["ok now.", "This is not acceptable!", "I need answers ... NOW!"], true)
 
