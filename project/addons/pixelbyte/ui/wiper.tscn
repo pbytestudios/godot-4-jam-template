@@ -3,7 +3,6 @@
 [ext_resource type="Script" path="res://addons/pixelbyte/ui/wiper.gd" id="1_wjie8"]
 [ext_resource type="Texture2D" uid="uid://bfskmuetl237p" path="res://gfx/gradients/Angled_01-256x256.png" id="2_kd5xd"]
 [ext_resource type="Shader" path="res://addons/pixelbyte/shaders/alpha_wipe.gdshader" id="3_xxai8"]
-[ext_resource type="Script" path="res://addons/pixelbyte/node_lib/scripts/Sounder.gd" id="4_74ent"]
 
 [sub_resource type="Animation" id="Animation_iqedk"]
 tracks/0/type = "value"
@@ -46,6 +45,9 @@ shader_parameter/dissolve_value = 0.0
 shader_parameter/wipe_color = null
 shader_parameter/use_alpha = false
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_yh4b6"]
+random_pitch = 1.1
+
 [node name="Wiper" type="CanvasLayer" node_paths=PackedStringArray("anim", "wipe_rect", "wipe_sound", "unwipe_sound")]
 process_mode = 3
 layer = 100
@@ -72,10 +74,10 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 
-[node name="Wipe" type="AudioStreamPlayer" parent="."]
+[node name="Wipe" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamRandomizer_yh4b6")
 bus = &"Sfx"
-script = ExtResource("4_74ent")
 
-[node name="Unwipe" type="AudioStreamPlayer" parent="."]
+[node name="Unwipe" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamRandomizer_yh4b6")
 bus = &"Sfx"
-script = ExtResource("4_74ent")
