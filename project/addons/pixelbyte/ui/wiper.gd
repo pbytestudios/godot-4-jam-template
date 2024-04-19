@@ -30,9 +30,9 @@ var wiping:bool:
 @export var wipe_rect:ColorRect
 ## An optional transition sound
 
-@export var wipe_sound:Sounder
+@export var wipe_sound:AudioStreamPlayer
 ## An optional transition sound
-@export var unwipe_sound:Sounder
+@export var unwipe_sound:AudioStreamPlayer
 
 ## Color used for the wipe
 @export var wipe_color: Color:

@@ -87,17 +87,13 @@ func _set_slider_settings(slider:Slider, value:float = 0):
 
 func _connect_signals():
 	var slider:Slider = $MC/Controls/MasterGroup/MasterSlider
-	if !slider.value_changed.is_connected(_on_slider_changed):
-		slider.value_changed.connect(_on_slider_changed.bind("masterVol", "Master", $MC/Controls/MasterGroup/Value))
+	slider.value_changed.connect(_on_slider_changed.bind("masterVol", "Master", $MC/Controls/MasterGroup/Value))
 	slider = $MC/Controls/SfxGroup/SfxSlider
-	if !slider.value_changed.is_connected(_on_slider_changed):
-		slider.value_changed.connect(_on_slider_changed.bind("sfxVol", "Sfx", $MC/Controls/SfxGroup/Value))
+	slider.value_changed.connect(_on_slider_changed.bind("sfxVol", "Sfx", $MC/Controls/SfxGroup/Value))
 	slider = $MC/Controls/MusicGroup/MusicSlider
-	if !slider.value_changed.is_connected(_on_slider_changed):
-		slider.value_changed.connect(_on_slider_changed.bind("musicVol", "Music", $MC/Controls/MusicGroup/Value))
+	slider.value_changed.connect(_on_slider_changed.bind("musicVol", "Music", $MC/Controls/MusicGroup/Value))
 	slider = $MC/Controls/AmbientGroup/AmbientSlider
-	if !slider.value_changed.is_connected(_on_slider_changed):
-		slider.value_changed.connect(_on_slider_changed.bind("ambientVol", "Ambient", $MC/Controls/AmbientGroup/Value))
+	slider.value_changed.connect(_on_slider_changed.bind("ambientVol", "Ambient", $MC/Controls/AmbientGroup/Value))
 	
 	var checkbox:CheckBox = $MC/Controls/CheckBoxContainer/FullscreenCheck
 	if !checkbox.toggled.is_connected(_on_FullscreenCheck_toggled):
@@ -105,9 +101,9 @@ func _connect_signals():
 	
 func _on_slider_changed(value:int, propName:StringName, busName:StringName, label:Label):
 	settings._set(propName, value)
-	set_bus(busName,label, value)
+	_set_bus(busName,label, value)
 
-func set_bus(name:String, label:Label, value:int):
+func _set_bus(name:String, label:Label, value:int):
 	label.text = "%s%%" % value
 	var db = _convert_percent_to_db(value)
 	settings.set_vol(name, db)
