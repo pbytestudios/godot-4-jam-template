@@ -25,7 +25,7 @@ enum XAlign {Left, Middle, Right}
 # optional: if you have a tail for a speech box, put it here
 @export var tail:Control
 # optional: Holds a type sound that we will play if valid
-@export var type_sound:Sounder
+@export var type_sound:AudioStreamPlayer
 
 # Once the dialog is showing, you can await
 signal skip_pressed
@@ -162,14 +162,12 @@ func _type_text():
 			_:
 				timer.start(letter_time)
 		
-		if type_sound != null && type_sound.sounds.size() > 0:
+		if type_sound != null && type_sound.stream:
 			if parsed_text[count] in ["a","e","i","o","u"]:
-				type_sound.random_pitch_min = 0.1
-				type_sound.random_pitch_max = 0.4
+				type_sound.pitch_scale = randf_range(1.1, 1.4)
 			else:
-				type_sound.random_pitch_min = -0.1
-				type_sound.random_pitch_max = 0.1
-			type_sound.play_rnd()
+				type_sound.pitch_scale = randf_range(0.9, 1.1)
+			type_sound.play()
 #			await  type_sound.finished
 		
 		if count < num_chars -1:
