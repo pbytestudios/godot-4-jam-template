@@ -4,6 +4,7 @@ extends Camera2D
 #Camera shake parameters
 enum ShakeType {Random, Sine, Noise}
 
+@export var sine_freq := 10.0
 @export var noise_octaves := 4
 @export var noise_period := 20
 @export var noise_persistence := 0.8
@@ -53,7 +54,7 @@ func _process(delta):
 			ShakeType.Random:
 				offset = Vector2(randf(), randf()) * _intensity
 			ShakeType.Sine:
-				offset = Vector2(sin(Time.get_unix_time_from_system() * 0.03) * _intensity.x, sin(Time.get_unix_time_from_system() * 0.07) * _intensity.y) * 0.5
+				offset = Vector2(cos(Time.get_unix_time_from_system() * TAU * sine_freq) * _intensity.x, sin(Time.get_unix_time_from_system() * TAU * sine_freq) * _intensity.y) * 0.5
 			ShakeType.Noise:
 				var _noise_value_x = _noise.get_noise_1d(Time.get_unix_time_from_system() * 0.1)
 				var _noise_value_y = _noise.get_noise_1d(Time.get_unix_time_from_system() * 0.1 + 100.0)
@@ -68,19 +69,20 @@ func set_limits(limits:Rect2):
 	limit_right = int(limits.end.x)
 	limit_bottom = int(limits.end.y)
 
-func zoom_to_limits(limits:Rect2):
-	var zoom = limits.size / get_viewport_rect().size
-	#take the larger number to keep the aspect ratio correct while fitting everything within the camear
-	set_zoom(Vector2.ONE * 1 / max(snapped(zoom.x, 0.1), snapped(zoom.y, 0.1)))
-	global_position = limits.get_center()
+func zoom_to_limits(limits:Rect2, set_center:bool = true):
+	var zoom = get_viewport_rect().size / Vector2(limits.size)
+	#take the larger number to keep the aspect ratio correct while fitting everything within the camera
+	set_zoom(Vector2.ONE * min(snapped(zoom.x, 0.05), snapped(zoom.y, 0.05)))
+	if set_center:
+		global_position = limits.get_center()
 
 #zoom camera in/out to fit the size of the rect
 func zoom_to_fit(fit_rect:Rect2, minRect:Rect2 = Rect2(Vector2.ZERO,Vector2.ZERO)):
-	#Get the center of the actual used tiles before our calculations
+	#Get the center of the fit rect
+	var rect_center = fit_rect.get_center()	
 	
 	#Don't go any smaller than the min rect
 	fit_rect = fit_rect.merge(minRect)
-	var rect_center = fit_rect.get_center()
 
-	zoom_to_limits(fit_rect)
+	zoom_to_limits(fit_rect, false)
 	global_position = rect_center
