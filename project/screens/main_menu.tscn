@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://cawl5krs8qel6"]
+[gd_scene load_steps=5 format=3 uid="uid://cawl5krs8qel6"]
 
 [ext_resource type="Script" path="res://screens/main_menu.gd" id="1_jusar"]
 [ext_resource type="Script" path="res://addons/pixelbyte/ui/ui_effects.gd" id="2_amggq"]
 [ext_resource type="PackedScene" uid="uid://c5kgexy2oxhl7" path="res://addons/pixelbyte/ui/settings/SettingsPanel.tscn" id="2_qg155"]
 [ext_resource type="Script" path="res://addons/pixelbyte/node_lib/scripts/PixelCam2D.gd" id="3_pp7n8"]
-[ext_resource type="VideoStream" path="res://test_stuff/test.ogv" id="5_uci1b"]
 
 [node name="MainMenu" type="Node2D"]
 script = ExtResource("1_jusar")
@@ -113,14 +112,6 @@ veil = NodePath("../ColorRect")
 anchor_mode = 0
 script = ExtResource("3_pp7n8")
 
-[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="Ui"]
-offset_left = 40.0
-offset_top = -240.0
-offset_right = 426.0
-stream = ExtResource("5_uci1b")
-autoplay = true
-expand = true
-
 [node name="ControlEffects" type="Node2D" parent="Ui"]
 
 [node name="MainMenu" type="Node2D" parent="Ui/ControlEffects" node_paths=PackedStringArray("parent", "start", "mark")]
@@ -141,25 +132,8 @@ position = Vector2(215, 1)
 [node name="Mark" type="Marker2D" parent="Ui/ControlEffects/MainMenu"]
 position = Vector2(1.04956, 1)
 
-[node name="Video" type="Node2D" parent="Ui/ControlEffects" node_paths=PackedStringArray("parent", "start", "mark")]
-script = ExtResource("2_amggq")
-parent = NodePath("../../VideoStreamPlayer")
-start = NodePath("Start")
-mark = NodePath("Mark")
-tween_mode = 1
-play_ease = 2
-tween_trans = 3
-
-[node name="Start" type="Marker2D" parent="Ui/ControlEffects/Video"]
-position = Vector2(40, -240)
-
-[node name="Mark" type="Marker2D" parent="Ui/ControlEffects/Video"]
-position = Vector2(40, 64)
-
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="." method="_on_play"]
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="Ui/ControlEffects/MainMenu" method="reverse"]
-[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="Ui/ControlEffects/Video" method="reverse"]
-[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="Ui/VideoStreamPlayer" method="set_paused" binds= [true]]
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Settings" to="." method="_on_settings"]
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Exit" to="." method="_on_exit"]
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Exit" to="Ui/ControlEffects/MainMenu" method="reverse"]
