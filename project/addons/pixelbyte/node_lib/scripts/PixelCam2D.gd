@@ -4,6 +4,9 @@ extends Camera2D
 #Camera shake parameters
 enum ShakeType {Random, Sine, Noise}
 
+## emitted when cam shake is complete
+signal finished
+
 @export var sine_freq := 10.0
 @export var noise_octaves := 4
 @export var noise_period := 20
@@ -32,12 +35,13 @@ func _ready():
 	_noise.fractal_lacunarity = noise_persistence
 	set_process(false)	
 
-func shake(shake_duration: float, shake_intensity : Vector2 = Vector2.ONE, type:int = ShakeType.Random):
+func shake(shake_duration: float, shake_intensity : Vector2 = Vector2.ONE, type:int = ShakeType.Random) -> PixelCam2D:
 	if shake_duration > _duration:
 		_intensity = shake_intensity
 		_duration = shake_duration
 		_type = type
 		set_process(true)
+	return self
 		
 func stop(): 
 	set_process(false)
@@ -61,6 +65,7 @@ func _process(delta):
 				offset = Vector2(_noise_value_x, _noise_value_y) * _intensity * 2.0
 				
 		if _duration <= 0:
+			(func (): finished.emit()).call_deferred()
 			stop()
 
 func set_limits(limits:Rect2):
