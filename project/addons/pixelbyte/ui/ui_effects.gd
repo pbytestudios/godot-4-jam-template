@@ -4,16 +4,25 @@ extends Node2D
 enum Mode {None, ToMarkOnReady, FromMarkOnReady, FadeIn, FadeOut}
 
 @export var parent:Control
-
+@export var start:Marker2D
+@export var mark:Marker2D
+@export_category("Tween Properties")
 @export var tween_time:float = 1.0
 @export var tween_mode:Mode = Mode.None
 @export var play_ease:Tween.EaseType = Tween.EASE_IN
 @export var reverse_ease:Tween.EaseType = Tween.EASE_OUT
 @export var tween_trans: Tween.TransitionType = Tween.TRANS_LINEAR
+@export_category("Editor Controls")
+@export var set_mark:bool:
+	set(val):
+		if val && !_finishing && Engine.is_editor_hint() && is_instance_valid(parent):
+			mark.global_position = parent.global_position
+			
 @export var play_tween:bool:
 	set(val):
 		if _finishing || !Engine.is_editor_hint() || (is_instance_valid(_tw) && _tw.is_running()):
 			return
+			
 		_update_play_mode()
 		_save_state()
 		_finishing = true
@@ -25,7 +34,7 @@ enum Mode {None, ToMarkOnReady, FromMarkOnReady, FadeIn, FadeOut}
 		play()
 		
 var _start_pos:Vector2:
-	get: return $Start.global_position
+	get: return start.global_position
 
 #func _validate_property(property: Dictionary) -> void:
 	#if property.name == "_start_pos":
@@ -33,7 +42,7 @@ var _start_pos:Vector2:
 
 var _mark_pos:Vector2:
 	get: 
-		return $Mark.global_position
+		return mark.global_position
 	
 var _tw:Tween
 
@@ -55,8 +64,8 @@ func _process(delta: float) -> void:
 	_update_positions()
 
 func _update_positions():
-	if parent != null:
-		$Start.global_position = parent.global_position
+	if parent != null && is_instance_valid(start):
+		start.global_position = parent.global_position
 	
 func _update_play_mode():
 	match tween_mode:

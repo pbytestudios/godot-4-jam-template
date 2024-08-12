@@ -118,7 +118,6 @@ func unwipe():
 	if anim.is_playing():
 		anim.stop()
 	
-	print(wipe_speed)
 	if has_unwipe_anim:
 		anim.play("unwipe", -1, 1.0 / wipe_speed)
 	else:

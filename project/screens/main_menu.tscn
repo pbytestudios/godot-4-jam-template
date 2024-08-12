@@ -32,9 +32,9 @@ anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -213.0
+offset_left = -213.957
 offset_top = 39.0
-offset_right = 1.00037
+offset_right = 0.0437012
 offset_bottom = -36.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -115,21 +115,24 @@ script = ExtResource("3_pp7n8")
 
 [node name="ControlEffects" type="Node2D" parent="Ui"]
 
-[node name="MainMenu" type="Node2D" parent="Ui/ControlEffects" node_paths=PackedStringArray("parent")]
+[node name="MainMenu" type="Node2D" parent="Ui/ControlEffects" node_paths=PackedStringArray("parent", "start", "mark")]
 position = Vector2(425, 38)
 script = ExtResource("2_amggq")
 parent = NodePath("../../MainMenuContainer")
+start = NodePath("Start")
+mark = NodePath("Mark")
 tween_time = 0.75
 tween_mode = 2
 play_ease = 1
 reverse_ease = 0
 tween_trans = 3
-
-[node name="Mark" type="Marker2D" parent="Ui/ControlEffects/MainMenu"]
-position = Vector2(386, 1)
+set_mark = null
 
 [node name="Start" type="Marker2D" parent="Ui/ControlEffects/MainMenu"]
-position = Vector2(2, 1)
+position = Vector2(1.04645, 1)
+
+[node name="Mark" type="Marker2D" parent="Ui/ControlEffects/MainMenu"]
+position = Vector2(215, 1)
 
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="." method="_on_play"]
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="Ui/ControlEffects/MainMenu" method="reverse"]
