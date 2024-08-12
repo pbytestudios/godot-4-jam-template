@@ -8,6 +8,8 @@ func _ready():
 		#Wiper.wipe_speed = 0.5
 		Wiper.wipe_immediate()
 		await Wiper.unwipe()
+		
+	$Ui/ControlEffects/MainMenu.play()
 	
 	if OS.get_name() == "HTML5":
 		$Ui/PanelContainer/MarginContainer/VBoxContainer/Exit.visible = false

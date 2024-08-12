@@ -1,7 +1,7 @@
 @tool 
 extends Node2D
 
-enum Mode {None, ToMarkOnReady, FromMarkOnReady, FadeIn, FadeOut}
+enum Mode {None, ToMarkOnReady, FromMarkOnReady, ToMark, FromMark, FadeIn, FadeOut}
 
 @export var parent:Control
 @export var start:Marker2D
@@ -69,10 +69,10 @@ func _update_positions():
 	
 func _update_play_mode():
 	match tween_mode:
-		Mode.ToMarkOnReady:
+		Mode.ToMarkOnReady, Mode.ToMark:
 			_play = func(): _do_tween("global_position", play_ease, _mark_pos, tween_time)
 			_reverse = func(): _do_tween("global_position",reverse_ease, _start_pos, tween_time)
-		Mode.FromMarkOnReady:
+		Mode.FromMarkOnReady, Mode.FromMark:
 			_play = func():
 				parent.global_position = _mark_pos
 				_do_tween("global_position", play_ease, _start_pos, tween_time)

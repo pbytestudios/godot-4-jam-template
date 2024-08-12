@@ -32,9 +32,8 @@ anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -213.957
 offset_top = 39.0
-offset_right = 0.0437012
+offset_right = 214.0
 offset_bottom = -36.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -122,17 +121,17 @@ parent = NodePath("../../MainMenuContainer")
 start = NodePath("Start")
 mark = NodePath("Mark")
 tween_time = 0.75
-tween_mode = 2
+tween_mode = 3
 play_ease = 1
 reverse_ease = 0
 tween_trans = 3
 set_mark = null
 
 [node name="Start" type="Marker2D" parent="Ui/ControlEffects/MainMenu"]
-position = Vector2(1.04645, 1)
+position = Vector2(215, 1)
 
 [node name="Mark" type="Marker2D" parent="Ui/ControlEffects/MainMenu"]
-position = Vector2(215, 1)
+position = Vector2(1.04956, 1)
 
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="." method="_on_play"]
 [connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="Ui/ControlEffects/MainMenu" method="reverse"]
