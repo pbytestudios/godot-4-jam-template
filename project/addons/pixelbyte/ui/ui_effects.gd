@@ -26,7 +26,7 @@ enum Mode {None, ToMarkOnReady, FromMarkOnReady, ToMark, FromMark, FadeIn, FadeO
 		_update_play_mode()
 		_save_state()
 		_finishing = true
-		finished.connect(func():
+		finished_play.connect(func():
 			await get_tree().create_timer(0.125).timeout
 			_restore_state()
 			_finishing = false
@@ -50,7 +50,9 @@ var _play:Callable
 var _reverse:Callable
 
 ## Emitted when the ui action finishes
-signal finished
+signal finished_play
+## Emitted when the ui action finishes reversing
+signal finished_reverse
 
 func _ready() -> void:
 	set_process(Engine.is_editor_hint())
@@ -71,30 +73,33 @@ func _update_play_mode():
 	match tween_mode:
 		Mode.ToMarkOnReady, Mode.ToMark:
 			_play = func(): _do_tween("global_position", play_ease, _mark_pos, tween_time)
-			_reverse = func(): _do_tween("global_position",reverse_ease, _start_pos, tween_time)
+			_reverse = func(): _do_tween("global_position",reverse_ease, _start_pos, tween_time, true)
 		Mode.FromMarkOnReady, Mode.FromMark:
 			_play = func():
 				parent.global_position = _mark_pos
-				_do_tween("global_position", play_ease, _start_pos, tween_time)
+				_do_tween("global_position", play_ease, _start_pos, tween_time, true)
 			_reverse = func(): _do_tween("global_position", reverse_ease, _mark_pos, tween_time)
 		Mode.FadeIn:
 			_play = func():_fade(play_ease, 0.0, 1.0, tween_time)
-			_reverse = func():_fade(reverse_ease, 1.0, 0.0, tween_time)
+			_reverse = func():_fade(reverse_ease, 1.0, 0.0, tween_time, true)
 		Mode.FadeOut:
 			_play = func():_fade(play_ease, 1.0, 0.0, tween_time)
-			_reverse = func():_fade(reverse_ease, 0.0, 1.0, tween_time)
+			_reverse = func():_fade(reverse_ease, 0.0, 1.0, tween_time, true)
 
-func _do_tween(property:String, ease:Tween.EaseType, value, time:float):
+func _do_tween(property:String, ease:Tween.EaseType, value, time:float, reverse:bool = false):
 	if is_instance_valid(_tw):
 		_tw.kill()
 
 	_tw = create_tween().set_ease(ease).set_trans(tween_trans)
 	_tw.tween_property(parent, property, value, time)
-	_tw.tween_callback(func(): finished.emit())
+	if reverse:
+		_tw.tween_callback(func(): finished_reverse.emit())
+	else:
+		_tw.tween_callback(func(): finished_play.emit())
 	
-func _fade(ease:Tween.EaseType, start_alpha:float, stop_alpha:float, time:float):
+func _fade(ease:Tween.EaseType, start_alpha:float, stop_alpha:float, time:float, reverse:bool = false):
 	parent.modulate.a = start_alpha
-	_do_tween("modulate:a", ease, stop_alpha, time)
+	_do_tween("modulate:a", ease, stop_alpha, time, reverse)
 
 func play(): _play.call()
 func reverse(): _reverse.call()
