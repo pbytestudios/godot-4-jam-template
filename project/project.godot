@@ -36,7 +36,7 @@ window/stretch/mode="viewport"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/firebelley/palette_importer/plugin.cfg", "res://addons/pixelbyte/node_lib/plugin.cfg")
+enabled=PackedStringArray("res://addons/firebelley/palette_importer/plugin.cfg")
 
 [filesystem]
 
