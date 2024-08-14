@@ -1,4 +1,5 @@
-@tool 
+@tool
+class_name UIEffect
 extends Node2D
 
 enum Mode {None, ToMarkOnReady, FromMarkOnReady, ToMark, FromMark, FadeIn, FadeOut}
@@ -61,6 +62,8 @@ func _ready() -> void:
 		_update_play_mode()
 		if tween_mode == Mode.FromMarkOnReady || tween_mode == Mode.ToMarkOnReady:
 			play()
+		if tween_mode == Mode.FadeIn:
+			parent.modulate.a = 0
 
 func _process(delta: float) -> void:
 	_update_positions()
@@ -96,6 +99,8 @@ func _do_tween(property:String, ease:Tween.EaseType, value, time:float, reverse:
 		_tw.tween_callback(func(): finished_reverse.emit())
 	else:
 		_tw.tween_callback(func(): finished_play.emit())
+
+func is_playing(): return is_instance_valid(_tw) && _tw.is_running()
 	
 func _fade(ease:Tween.EaseType, start_alpha:float, stop_alpha:float, time:float, reverse:bool = false):
 	parent.modulate.a = start_alpha

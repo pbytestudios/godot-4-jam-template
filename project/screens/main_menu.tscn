@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://cawl5krs8qel6"]
 
 [ext_resource type="Script" path="res://screens/main_menu.gd" id="1_jusar"]
-[ext_resource type="Script" path="res://addons/pixelbyte/ui/ui_effects.gd" id="2_amggq"]
+[ext_resource type="Script" path="res://addons/pixelbyte/ui/ui_effect.gd" id="2_amggq"]
 [ext_resource type="PackedScene" uid="uid://c5kgexy2oxhl7" path="res://addons/pixelbyte/ui/settings/SettingsPanel.tscn" id="2_qg155"]
-[ext_resource type="Script" path="res://addons/pixelbyte/node_lib/scripts/PixelCam2D.gd" id="3_pp7n8"]
+[ext_resource type="Script" path="res://addons/pixelbyte/scripts/PixelCam2D.gd" id="3_pp7n8"]
 
 [node name="MainMenu" type="Node2D"]
 script = ExtResource("1_jusar")

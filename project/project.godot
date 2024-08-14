@@ -43,6 +43,10 @@ enabled=PackedStringArray("res://addons/firebelley/palette_importer/plugin.cfg",
 import/blender/enabled=false
 import/fbx/enabled=false
 
+[global_group]
+
+Savable="Nodes can be saved/loaded"
+
 [input]
 
 ui_accept={
