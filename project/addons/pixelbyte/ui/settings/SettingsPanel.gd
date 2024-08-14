@@ -41,7 +41,6 @@ func _ready():
 	super._ready()
 
 func _closed_with_escape():
-	result = "Cancel"
 	_read_settings()
 	
 func _update_from_settings():
