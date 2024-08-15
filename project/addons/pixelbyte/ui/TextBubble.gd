@@ -162,7 +162,7 @@ func _type_text():
 			_:
 				timer.start(letter_time)
 		
-		if type_sound != null && type_sound.stream:
+		if type_sound != null && type_sound.stream != null:
 			if parsed_text[count] in ["a","e","i","o","u"]:
 				type_sound.pitch_scale = randf_range(1.1, 1.4)
 			else:
