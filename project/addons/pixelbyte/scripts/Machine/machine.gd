@@ -124,7 +124,7 @@ func _change_state(state_funcs:Dictionary):
 	current_update = update_empty
 
 	if !_current_state_functions.is_empty() && _current_state_functions.exit.is_valid():
-		_current_state_functions.exit.call()
+		await _current_state_functions.exit.call()
 	
 	if state_funcs != _current_state_functions:
 		_previous_state_functions = _current_state_functions
@@ -135,7 +135,7 @@ func _change_state(state_funcs:Dictionary):
 	
 	#call the new state's enter if there is one
 	if !_current_state_functions.is_empty() && _current_state_functions.enter.is_valid():
-		_current_state_functions.enter.call()
+		await _current_state_functions.enter.call()
 
 	#setup the update and physics functions if they exist
 	if !_current_state_functions.is_empty() && _current_state_functions.update.is_valid() && !stopped:
