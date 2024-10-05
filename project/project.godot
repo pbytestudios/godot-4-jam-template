@@ -40,7 +40,6 @@ enabled=PackedStringArray("res://addons/firebelley/palette_importer/plugin.cfg")
 
 [filesystem]
 
-import/blender/enabled=false
 import/fbx/enabled=false
 
 [global_group]
