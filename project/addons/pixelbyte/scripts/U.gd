@@ -26,16 +26,10 @@ static func get_children_of_type(parent:Node, child_type) -> Array:
 	return arr
 
 static func get_first_child_of_type_rec(parent:Node, type):
-	for i in range(parent.get_child_count()):
-		var ch = _get_first_child_rec(parent.get_child(i), type)
-		if ch:	return ch
-	return null
-
-static func _get_first_child_rec(parent:Node, type):
 	if is_instance_of(parent, type):
 		return parent
 	for i in range(parent.get_child_count()):
-		var ch = _get_first_child_rec(parent.get_child(i), type)
+		var ch = get_first_child_of_type_rec(parent.get_child(i), type)
 		if ch:	return ch
 	return null
 	
