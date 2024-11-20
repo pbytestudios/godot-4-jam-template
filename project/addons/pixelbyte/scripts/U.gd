@@ -44,3 +44,8 @@ static func free_children(parent:Node) -> void:
 		return
 	for child in parent.get_children():
 		child.queue_free()
+
+static func clear_subscribers(sig:Signal):
+	var sub_info:Array = sig.get_connections()
+	for con in sub_info:
+		sig.disconnect(con.callable)
