@@ -21,7 +21,7 @@ var focus_index: int = -1
 # if true, then the hide_dlg() func was called internally and should ignore visible check
 var _closing_with_escape:bool
 
-var speed_scale: float:
+var speed_scale: float = 1.0:
 	set(val): speed_scale = val
 
 var title:String = "":
@@ -73,8 +73,7 @@ func _add_button(text:String) -> Button:
 	return b
 
 func _button_pressed(btn:Button):
-	closed.emit(btn.text)
-	hide_dlg()
+	hide_dlg(false, btn.text)
 	
 func _remove_all_buttons():
 	for child in button_holder.get_children():
@@ -127,24 +126,17 @@ func show_dlg() -> Dialog:
 	return self
 
 #region awaitables
-func inform(message:String, _title:String):
+func inform(message:String, _title:String) -> Dialog:
 	title = _title
 	msg = message
 	set_buttons(["Ok"], 0)
 	show_dlg()
 	return self
 
-func confirm(question:String, _title:String = "Confirm", yes:String ="Yes", no:String="No", focusYes:bool = false):
+func confirm(question:String, _title:String = "Confirm", focusYes:bool = false, yes:String ="Yes", no:String="No") -> Dialog:
 	title = _title
 	msg = question
 	set_buttons([yes, no], 0 if focusYes else 1)
-	show_dlg()
-	return self
-
-func ask(question:String, _title:String, buttons:Array[StringName] =["Yes", "No"], default_btn_index:int = 0):
-	title = _title
-	msg = question
-	set_buttons(buttons, min(default_btn_index, buttons.size() - 1))
 	show_dlg()
 	return self
 #endregion
@@ -166,14 +158,15 @@ func _unhandled_input(event):
 #override this to do something 'special' when 'escape_closes = true' and the escape key is pressed
 func _closed_with_escape(): pass
 
-func hide_dlg(closed_with_esc: bool = false):
+func hide_dlg(closed_with_esc: bool = false, result:String=""):
 	if !visible && !_closing_with_escape:
+		closed.emit("")
 		return
 
 	_closing_with_escape = false
 	
 	if is_instance_valid(animator):
-		animator.playback_speed = speed_scale
+		animator.speed_scale = speed_scale
 		if animator.has_animation("out"):
 			animator.play("out")
 		elif animator.has_animation("pop"):
@@ -192,6 +185,8 @@ func hide_dlg(closed_with_esc: bool = false):
 	if closed_with_esc:
 		_closed_with_escape()
 		closed.emit("")
+	else:
+		closed.emit(result)
 		
 func set_buttons(button_names:Array[StringName], focus:int = -1):
 	if button_names == null or button_names.size() == 0:

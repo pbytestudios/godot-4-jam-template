@@ -2,12 +2,13 @@
 class_name UIEffect
 extends Node2D
 
-enum Mode {None, ToMarkOnReady, FromMarkOnReady, ToMark, FromMark, FadeIn, FadeOut}
+enum Mode {None, ToMark, FromMark, FadeIn, FadeOut}
 
-@export var parent:Control
+@export var target:Control
 @export var start:Marker2D
 @export var mark:Marker2D
 @export_category("Tween Properties")
+@export var play_on_ready:bool = false
 @export var tween_time:float = 1.0
 @export var tween_mode:Mode = Mode.None
 @export var play_ease:Tween.EaseType = Tween.EASE_IN
@@ -16,8 +17,8 @@ enum Mode {None, ToMarkOnReady, FromMarkOnReady, ToMark, FromMark, FadeIn, FadeO
 @export_category("Editor Controls")
 @export var set_mark:bool:
 	set(val):
-		if val && !_finishing && Engine.is_editor_hint() && is_instance_valid(parent):
-			mark.global_position = parent.global_position
+		if val && !_finishing && Engine.is_editor_hint() && is_instance_valid(target):
+			mark.global_position = target.global_position
 			
 @export var play_tween:bool:
 	set(val):
@@ -60,26 +61,29 @@ func _ready() -> void:
 	
 	if !Engine.is_editor_hint():
 		_update_play_mode()
-		if tween_mode == Mode.FromMarkOnReady || tween_mode == Mode.ToMarkOnReady:
-			play()
 		if tween_mode == Mode.FadeIn:
-			parent.modulate.a = 0
+			target.modulate.a = 0
+		if play_on_ready:
+			play()
 
 func _process(delta: float) -> void:
 	_update_positions()
 
 func _update_positions():
-	if parent != null && is_instance_valid(start):
-		start.global_position = parent.global_position
+	if target != null && is_instance_valid(start):
+		start.global_position = target.global_position
 	
 func _update_play_mode():
 	match tween_mode:
-		Mode.ToMarkOnReady, Mode.ToMark:
+		Mode.None:
+			_play = Callable()
+			_reverse = Callable()
+		Mode.ToMark:
 			_play = func(): _do_tween("global_position", play_ease, _mark_pos, tween_time)
 			_reverse = func(): _do_tween("global_position",reverse_ease, _start_pos, tween_time, true)
-		Mode.FromMarkOnReady, Mode.FromMark:
+		Mode.FromMark:
 			_play = func():
-				parent.global_position = _mark_pos
+				target.global_position = _mark_pos
 				_do_tween("global_position", play_ease, _start_pos, tween_time, true)
 			_reverse = func(): _do_tween("global_position", reverse_ease, _mark_pos, tween_time)
 		Mode.FadeIn:
@@ -94,7 +98,7 @@ func _do_tween(property:String, ease:Tween.EaseType, value, time:float, reverse:
 		_tw.kill()
 
 	_tw = create_tween().set_ease(ease).set_trans(tween_trans)
-	_tw.tween_property(parent, property, value, time)
+	_tw.tween_property(target, property, value, time)
 	if reverse:
 		_tw.tween_callback(func(): finished_reverse.emit())
 	else:
@@ -103,7 +107,7 @@ func _do_tween(property:String, ease:Tween.EaseType, value, time:float, reverse:
 func is_playing(): return is_instance_valid(_tw) && _tw.is_running()
 	
 func _fade(ease:Tween.EaseType, start_alpha:float, stop_alpha:float, time:float, reverse:bool = false):
-	parent.modulate.a = start_alpha
+	target.modulate.a = start_alpha
 	_do_tween("modulate:a", ease, stop_alpha, time, reverse)
 
 func play(): _play.call()
@@ -114,11 +118,11 @@ var _state:Dictionary
 var _finishing:bool
 func _save_state():
 	_state = {
-		"global_position" = parent.global_position,
-		"alpha" = parent.modulate.a
+		"global_position" = target.global_position,
+		"alpha" = target.modulate.a
 	}
 
 func _restore_state():
 	for key in _state:
-		parent.set(key, _state[key])
+		target.set(key, _state[key])
 	_state = {}

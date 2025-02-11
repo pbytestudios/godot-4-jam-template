@@ -68,6 +68,13 @@ func _process(delta):
 			(func (): finished.emit()).call_deferred()
 			stop()
 
+func set_limits_from_tilemap(map:TileMapLayer):
+	var cell_size = map.tile_set.tile_size
+	var rect = map.get_used_rect()
+	rect.size = Vector2i(rect.size.x * cell_size.x, rect.size.y * cell_size.y)
+	rect.position = Vector2i(rect.position.x * cell_size.x, rect.position.y * cell_size.y)
+	set_limits(rect)
+	
 func set_limits(limits:Rect2):
 	limit_left = int(limits.position.x)
 	limit_top = int(limits.position.y)
