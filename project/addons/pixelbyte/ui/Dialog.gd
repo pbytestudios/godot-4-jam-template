@@ -51,6 +51,7 @@ func _hook_up_existing_buttons():
 		b.custom_minimum_size = button_size
 		b.mouse_entered.connect(_mouse_entered.bind(b))
 	focus_index = 0
+	_update_button_focus_neighbors()
 
 func set_button_min_size():
 	for btn in button_holder.get_children():
@@ -98,6 +99,7 @@ func _make_buttons(num_needed:int):
 			_add_button("")
 	elif to_add < 0:
 		_remove_buttons_from_end(-to_add)
+	_update_button_focus_neighbors()
 
 func show_dlg() -> Dialog:
 	if visible: return
@@ -199,6 +201,18 @@ func set_buttons(button_names:Array[StringName], focus:int = -1):
 	for i in range(0, button_names.size()):
 		button_holder.get_child(i).text = button_names[i]
 	focus_index = focus
+
+func _update_button_focus_neighbors():
+	var child_count:int = button_holder.get_child_count()
+	for i in range(child_count):
+		if i + 1 < child_count:
+			button_holder.get_child(i).focus_neighbor_right = button_holder.get_child(i + 1).get_path()
+		else:
+			button_holder.get_child(i).focus_neighbor_right = button_holder.get_child(0).get_path()
+		if i - 1 >= 0:
+			button_holder.get_child(i).focus_neighbor_left = button_holder.get_child(i-1).get_path()
+		else:
+			button_holder.get_child(i).focus_neighbor_left = button_holder.get_child(child_count - 1).get_path()
 
 func _mouse_entered(btn:Button):
 	#don't emit the mouse_entered_button signal if the button already has focus
