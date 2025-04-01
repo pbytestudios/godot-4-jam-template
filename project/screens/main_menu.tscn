@@ -1,14 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://cawl5krs8qel6"]
+[gd_scene load_steps=5 format=3 uid="uid://cawl5krs8qel6"]
 
 [ext_resource type="Script" uid="uid://317xssaj8ifm" path="res://screens/main_menu.gd" id="1_jusar"]
 [ext_resource type="Script" uid="uid://515wywnqk3dk" path="res://addons/pixelbyte/ui/ui_effect.gd" id="2_amggq"]
 [ext_resource type="PackedScene" uid="uid://c5kgexy2oxhl7" path="res://addons/pixelbyte/ui/settings/SettingsPanel.tscn" id="2_qg155"]
-[ext_resource type="PackedScene" uid="uid://q31630k68xsr" path="res://test_stuff/3D/screens/Camera3DFollow.tscn" id="2_wu0qq"]
 [ext_resource type="Script" uid="uid://dmg556334w7v" path="res://addons/pixelbyte/scripts/PixelCam2D.gd" id="3_pp7n8"]
 
 [node name="MainMenu" type="Node2D" node_paths=PackedStringArray("menu_effects")]
 script = ExtResource("1_jusar")
-game_scene = ExtResource("2_wu0qq")
 menu_effects = NodePath("Ui/ControlEffects/MainMenuEffects")
 
 [node name="Ui" type="CanvasLayer" parent="."]
