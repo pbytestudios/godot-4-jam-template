@@ -1,12 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://cawl5krs8qel6"]
+[gd_scene load_steps=6 format=3 uid="uid://cawl5krs8qel6"]
 
-[ext_resource type="Script" path="res://screens/main_menu.gd" id="1_jusar"]
-[ext_resource type="Script" path="res://addons/pixelbyte/ui/ui_effect.gd" id="2_amggq"]
+[ext_resource type="Script" uid="uid://317xssaj8ifm" path="res://screens/main_menu.gd" id="1_jusar"]
+[ext_resource type="Script" uid="uid://515wywnqk3dk" path="res://addons/pixelbyte/ui/ui_effect.gd" id="2_amggq"]
 [ext_resource type="PackedScene" uid="uid://c5kgexy2oxhl7" path="res://addons/pixelbyte/ui/settings/SettingsPanel.tscn" id="2_qg155"]
-[ext_resource type="Script" path="res://addons/pixelbyte/scripts/PixelCam2D.gd" id="3_pp7n8"]
+[ext_resource type="PackedScene" uid="uid://q31630k68xsr" path="res://test_stuff/3D/screens/Camera3DFollow.tscn" id="2_wu0qq"]
+[ext_resource type="Script" uid="uid://dmg556334w7v" path="res://addons/pixelbyte/scripts/PixelCam2D.gd" id="3_pp7n8"]
 
-[node name="MainMenu" type="Node2D"]
+[node name="MainMenu" type="Node2D" node_paths=PackedStringArray("menu_effects")]
 script = ExtResource("1_jusar")
+game_scene = ExtResource("2_wu0qq")
+menu_effects = NodePath("Ui/ControlEffects/MainMenuEffects")
 
 [node name="Ui" type="CanvasLayer" parent="."]
 
@@ -27,32 +30,32 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.0437927, 0.0810654, 0.160156, 1)
 
-[node name="MainMenuContainer" type="PanelContainer" parent="Ui"]
+[node name="MainMenu" type="PanelContainer" parent="Ui"]
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 39.0
-offset_right = 214.0
-offset_bottom = -36.0
+offset_left = -214.0
+offset_top = 40.0
+offset_bottom = -35.0
 grow_horizontal = 0
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="Ui/MainMenuContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Ui/MainMenu"]
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Ui/MainMenuContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Ui/MainMenu/MarginContainer"]
 layout_mode = 2
 mouse_filter = 0
 theme_override_constants/separation = 16
 
-[node name="Title" type="Label" parent="Ui/MainMenuContainer/MarginContainer/VBoxContainer"]
+[node name="Title" type="Label" parent="Ui/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 40
@@ -60,14 +63,14 @@ text = "Menu"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Play" type="Button" parent="Ui/MainMenuContainer/MarginContainer/VBoxContainer"]
+[node name="Play" type="Button" parent="Ui/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
 text = "Play
 "
 
-[node name="Continue" type="Button" parent="Ui/MainMenuContainer/MarginContainer/VBoxContainer"]
+[node name="Continue" type="Button" parent="Ui/MainMenu/MarginContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
@@ -75,14 +78,14 @@ theme_override_font_sizes/font_size = 30
 text = "Continue
 "
 
-[node name="Settings" type="Button" parent="Ui/MainMenuContainer/MarginContainer/VBoxContainer"]
+[node name="Settings" type="Button" parent="Ui/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
 text = "Settings
 "
 
-[node name="Exit" type="Button" parent="Ui/MainMenuContainer/MarginContainer/VBoxContainer"]
+[node name="Exit" type="Button" parent="Ui/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
@@ -114,26 +117,25 @@ script = ExtResource("3_pp7n8")
 
 [node name="ControlEffects" type="Node2D" parent="Ui"]
 
-[node name="MainMenu" type="Node2D" parent="Ui/ControlEffects" node_paths=PackedStringArray("parent", "start", "mark")]
-position = Vector2(425, 38)
+[node name="MainMenuEffects" type="Node2D" parent="Ui/ControlEffects" node_paths=PackedStringArray("target", "start", "mark")]
+position = Vector2(640, 39)
 script = ExtResource("2_amggq")
-parent = NodePath("../../MainMenuContainer")
+target = NodePath("../../MainMenu")
 start = NodePath("Start")
 mark = NodePath("Mark")
-tween_time = 0.75
+tween_play_time = 0.75
+tween_reverse_time = 0.75
 tween_mode = 3
 play_ease = 1
-reverse_ease = 0
 tween_trans = 3
 
-[node name="Start" type="Marker2D" parent="Ui/ControlEffects/MainMenu"]
-position = Vector2(215, 1)
+[node name="Mark" type="Marker2D" parent="Ui/ControlEffects/MainMenuEffects"]
+position = Vector2(0, 1)
 
-[node name="Mark" type="Marker2D" parent="Ui/ControlEffects/MainMenu"]
-position = Vector2(1.04956, 1)
+[node name="Start" type="Marker2D" parent="Ui/ControlEffects/MainMenuEffects"]
+position = Vector2(-214, 1)
 
-[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="." method="_on_play"]
-[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Play" to="Ui/ControlEffects/MainMenu" method="reverse"]
-[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Settings" to="." method="_on_settings"]
-[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Exit" to="." method="_on_exit"]
-[connection signal="pressed" from="Ui/MainMenuContainer/MarginContainer/VBoxContainer/Exit" to="Ui/ControlEffects/MainMenu" method="reverse"]
+[connection signal="pressed" from="Ui/MainMenu/MarginContainer/VBoxContainer/Play" to="." method="_on_play"]
+[connection signal="pressed" from="Ui/MainMenu/MarginContainer/VBoxContainer/Settings" to="." method="_on_settings"]
+[connection signal="pressed" from="Ui/MainMenu/MarginContainer/VBoxContainer/Exit" to="." method="_on_exit"]
+[connection signal="pressed" from="Ui/MainMenu/MarginContainer/VBoxContainer/Exit" to="Ui/ControlEffects/MainMenuEffects" method="reverse"]
