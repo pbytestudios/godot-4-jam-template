@@ -15,9 +15,11 @@ static func load_into(container:Node, scene_path:String) -> Node:
 	container.add_child(inst)
 	return inst
 
-static func exists(scene_path:String, hint:String="") -> bool: return ResourceLoader.exists(scene_path, hint)
+static func exists(scene_path:String, hint:String="") -> bool: 
+	return ResourceLoader.exists(scene_path, hint)
 
-static func reload(tree:SceneTree) -> Error: return tree.reload_current_scene()
+static func reload(tree:SceneTree) -> Error: 
+	return tree.reload_current_scene()
 
 static func change(tree:SceneTree, scene_path:String) -> Error: 
 	return tree.change_scene_to_file(scene_path)
