@@ -14,6 +14,7 @@ extends PanelContainer
 @export var animator:AnimationPlayer
 
 signal mouse_entered_button
+
 ## Called when the dialog is closed
 signal closed(result:String)
 
@@ -21,6 +22,7 @@ var focus_index: int = -1
 # if true, then the hide_dlg() func was called internally and should ignore visible check
 var _closing_with_escape:bool
 
+## How fast the open/cloase animations play (if they exist)
 var speed_scale: float = 1.0:
 	set(val): speed_scale = val
 
@@ -36,6 +38,9 @@ var msg:String:
 	set(val): if is_instance_valid(msg_label): msg_label.text = val
 
 func _ready():
+	# This node should always be active!
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	
 	if hide_on_ready:
 		visible = false
 	_hook_up_existing_buttons()
@@ -47,7 +52,7 @@ func _hook_up_existing_buttons():
 	#Existing buttons? hook 'em up'
 	for btn in button_holder.get_children():
 		var b:Button = btn
-		b.pressed.connect(_button_pressed.bind(b))
+		b.pressed.connect(_on_button_pressed.bind(b))
 		b.custom_minimum_size = button_size
 		b.mouse_entered.connect(_mouse_entered.bind(b))
 	focus_index = 0
@@ -69,11 +74,11 @@ func _add_button(text:String) -> Button:
 	b.text = text
 	b.custom_minimum_size = button_size
 	button_holder.add_child(b)
-	b.pressed.connect(_button_pressed.bind(b))
+	b.pressed.connect(_on_button_pressed.bind(b))
 	b.mouse_entered.connect(_mouse_entered.bind(b))
 	return b
 
-func _button_pressed(btn:Button):
+func _on_button_pressed(btn:Button):
 	hide_dlg(false, btn.text)
 	
 func _remove_all_buttons():
@@ -128,19 +133,21 @@ func show_dlg() -> Dialog:
 	return self
 
 #region awaitables
-func inform(message:String, _title:String) -> Dialog:
+func inform(message:String, _title:String = "Inform") -> String:
 	title = _title
 	msg = message
 	set_buttons(["Ok"], 0)
 	show_dlg()
-	return self
+	var result = await closed
+	return result
 
-func confirm(question:String, _title:String = "Confirm", focusYes:bool = false, yes:String ="Yes", no:String="No") -> Dialog:
+func confirm(question:String, _title:String = "Confirm", focusYes:bool = false, yes:String ="Yes", no:String="No") -> bool:
 	title = _title
 	msg = question
 	set_buttons([yes, no], 0 if focusYes else 1)
 	show_dlg()
-	return self
+	var result = await closed
+	return result == yes
 #endregion
 
 func _unhandled_input(event):

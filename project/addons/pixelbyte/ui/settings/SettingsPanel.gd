@@ -18,13 +18,6 @@ func _read_settings():
 	settings.read()
 	_update_from_settings()
 	
-func _button_pressed(btn:Button):
-	if btn.text == "Cancel" or btn.text == "No":
-		_read_settings()
-	else:
-		_write_settings()
-	super._button_pressed(btn)
-
 func _init():
 	settings = SettingsData.new()
 
@@ -33,6 +26,8 @@ func _ready():
 	sfx_bus_index = AudioServer.get_bus_index("Sfx")
 	ambient_bus_index = AudioServer.get_bus_index("Ambient")
 	
+	closed.connect(_on_update_settings)
+	
 	if OS.get_name() == "Android":
 		$MC/Controls/CheckBoxContainer.visible = false
 	
@@ -40,6 +35,11 @@ func _ready():
 	_connect_signals()
 	super._ready()
 
+func _on_update_settings(res:String):
+	if res != "Ok":
+		_read_settings()
+	else:
+		_write_settings()	
 func _closed_with_escape():
 	_read_settings()
 	
