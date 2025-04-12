@@ -145,6 +145,16 @@ func wipe_to_scene(scene_path:String, delay:float = 0, _unwipe:bool = false):
 		
 	wiped_to_scene.emit()
 
+func wipe_reload(delay:float = 0):
+	await wipe()
+	get_tree().reload_current_scene()
+	
+	if delay > 0:
+		await get_tree().create_timer(delay).timeout
+		await unwipe()
+		
+	wiped_to_scene.emit()
+	
 func wipe_to_packed(scene:PackedScene, delay: float = 0, _unwipe:bool = false):
 	await wipe()
 	Scene.change_packed(get_tree(), scene)

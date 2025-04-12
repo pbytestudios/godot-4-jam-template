@@ -2,7 +2,7 @@
 class_name UIEffect
 extends Node2D
 
-enum Mode {None, ToMark, FromMark, FadeIn, FadeOut}
+enum Mode {None, ToMark, FromMark, FadeIn, FadeOut, ScaleIn}
 enum State {Ready, Played}
 
 @export var target:Control
@@ -58,24 +58,30 @@ func _update_play_mode():
 	match tween_mode:
 		Mode.ToMark:
 			_play = func(): _do_tween("global_position", play_ease, _mark_pos, tween_play_time)
-			_reverse = func(): _do_tween("global_position",reverse_ease, _start_pos, tween_reverse_time, true)
+			_reverse = func(): _do_tween("global_position",reverse_ease, _start_pos, tween_reverse_time)
 		Mode.FromMark:
 			_play = func():
 				target.global_position = _mark_pos
-				_do_tween("global_position", play_ease, _start_pos, tween_play_time, true)
+				_do_tween("global_position", play_ease, _start_pos, tween_play_time)
 			_reverse = func(): _do_tween("global_position", reverse_ease, _mark_pos, tween_reverse_time)
 		Mode.FadeIn:
 			_play = func():_fade(play_ease, 0.0, 1.0, tween_play_time)
-			_reverse = func():_fade(reverse_ease, 1.0, 0.0, tween_reverse_time, true)
+			_reverse = func():_fade(reverse_ease, 1.0, 0.0, tween_reverse_time)
 		Mode.FadeOut:
 			_play = func():_fade(play_ease, 1.0, 0.0, tween_play_time)
-			_reverse = func():_fade(reverse_ease, 0.0, 1.0, tween_reverse_time, true)
+			_reverse = func():_fade(reverse_ease, 0.0, 1.0, tween_reverse_time)
+		Mode.ScaleIn:
+			_play = func(): 
+				var final:Vector2 = target.scale
+				target.scale = Vector2.ZERO 
+				_do_tween("scale", play_ease, final, tween_play_time)
+			_reverse = func(): _do_tween("scale", reverse_ease, Vector2.ZERO, tween_reverse_time)
 		Mode.None, _:
 			_play = Callable()
 			_reverse = Callable()
 
-func _do_tween(property:String, ease:Tween.EaseType, value, time:float, reverse:bool = false):
-	if is_instance_valid(_tw):
+func _do_tween(property:String, ease:Tween.EaseType, value, time:float):
+	if _tw && _tw.is_running():
 		_tw.kill()
 
 	_tw = create_tween().set_ease(ease).set_trans(tween_trans)
@@ -91,9 +97,9 @@ func _on_tween_finished():
 
 func is_playing(): return is_instance_valid(_tw) && _tw.is_running()
 	
-func _fade(ease:Tween.EaseType, start_alpha:float, stop_alpha:float, time:float, reverse:bool = false):
+func _fade(ease:Tween.EaseType, start_alpha:float, stop_alpha:float, time:float):
 	target.modulate.a = start_alpha
-	_do_tween("modulate:a", ease, stop_alpha, time, reverse)
+	_do_tween("modulate:a", ease, stop_alpha, time)
 
 func play(): 
 	if _play.is_valid():
@@ -137,10 +143,11 @@ var _finishing:bool
 func _save_state():
 	_state = {
 		"global_position" = target.global_position,
-		"alpha" = target.modulate.a
+		"alpha" = target.modulate.a,
+		"scale" = target.scale
 	}
 
 func _restore_state():
 	for key in _state:
 		target.set(key, _state[key])
-	_state = {}
+	#_state = {}
