@@ -50,8 +50,8 @@ var _allow_exit_to_same:bool
 # If true, the state machine will call the enter function of the current state even if the next state is the same state
 var _allow_enter_to_same:bool
 
-var current_update:Callable
-var current_fixed_update:Callable = Callable()
+var current_update:Callable = update_empty
+var current_fixed_update:Callable = update_empty
 
 # emitted AFTER the new state's enter method has been called
 signal changed_state
@@ -205,9 +205,9 @@ func _change_state(state_funcs:Dictionary):
 func update_empty(delta:float): pass
 
 func update(delta:float):
-	if !stopped:
+	if !stopped && !changing_states:
 		current_update.call(delta)
 
 func fixed_update(delta:float):
-	if !stopped:
+	if !stopped && !changing_states:
 		current_fixed_update.call(delta)
