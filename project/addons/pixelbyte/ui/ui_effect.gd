@@ -117,7 +117,7 @@ func reverse():
 func set_mark():
 	if !_finishing && Engine.is_editor_hint() && is_instance_valid(target):
 		mark.global_position = target.global_position
-
+		
 func play_tween():
 	if _finishing || !Engine.is_editor_hint() || (is_instance_valid(_tw) && _tw.is_running()):
 		return

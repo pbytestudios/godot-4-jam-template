@@ -22,7 +22,7 @@ var focus_index: int = -1
 # if true, then the hide_dlg() func was called internally and should ignore visible check
 var _closing_with_escape:bool
 
-## How fast the open/cloase animations play (if they exist)
+## How fast the open/close animations play (if they exist)
 var speed_scale: float = 1.0:
 	set(val): speed_scale = val
 

@@ -1,8 +1,8 @@
 extends RefCounted
 class_name Machine
 
-# Suffixes considered valid state suffixes
-const VALID_METHOD_SUFFIXES :Array[StringName] = ["_enter", "_update", "_exit"]
+# Suffixes considered valid state suffixes (_fixed_update must come before _update!)
+const VALID_METHOD_SUFFIXES :Array[StringName] = ["_enter", "_fixed_update", "_update", "_exit"]
 
 # 2024 Pixelbyte Studios
 # a state machine using Callables
@@ -51,13 +51,14 @@ var _allow_exit_to_same:bool
 var _allow_enter_to_same:bool
 
 var current_update:Callable
+var current_fixed_update:Callable = Callable()
 
 # emitted AFTER the new state's enter method has been called
 signal changed_state
 
 # function naming: the 'enter' callable will be used to name the state
 # if there is no enter function, then update, then exit
-func add(enter:Callable, update:Callable = Callable(), exit:Callable = Callable(), call_enter_on_same:bool = true, call_exit_on_same:bool = true):
+func add(enter:Callable, update:Callable = Callable(), exit:Callable = Callable(), _fixed_update = Callable(), call_enter_on_same:bool = true, call_exit_on_same:bool = true):
 	var state_name:String = ""
 	
 	# Get the name of the state by trying the enter function 1st, then the other twqo
@@ -67,6 +68,8 @@ func add(enter:Callable, update:Callable = Callable(), exit:Callable = Callable(
 		state_name = _get_state_name(update)
 	if state_name.is_empty() && exit.is_valid():
 		state_name = _get_state_name(exit)
+	if state_name.is_empty() && _fixed_update.is_valid():
+		state_name = _get_state_name(_fixed_update)
 
 	#Create a 'map' of this state and its methods
 	var map:Dictionary = {}
@@ -74,6 +77,8 @@ func add(enter:Callable, update:Callable = Callable(), exit:Callable = Callable(
 	map.update = update
 	map.exit = exit
 	map.name = state_name
+	
+	map.fixed_update = _fixed_update
 	# if true and the next state is the same as the current, it's enter function (if valid) is called
 	map.allow_reentry = call_enter_on_same
 	# if true and the next state is the same as the current, it's exit function (if valid) is called
@@ -83,7 +88,7 @@ func add(enter:Callable, update:Callable = Callable(), exit:Callable = Callable(
 		push_warning("[Machine] Warning: State name '%s' already in map!" % state_name)
 		
 	_state_map[state_name] = map
-
+	
 func remove(state_func:Callable):
 	var state_name:String = ""
 	state_name = _get_state_name(state_func)
@@ -137,7 +142,9 @@ func change(to:Callable, lock:bool = false):
 	if lock:
 		locked = true
 	
+	
 	var state_name = _get_state_name(to)
+	#print("%s => %s" % [current_state_name, state_name])
 	if !_state_map.has(state_name):
 		printerr("Cannot find state: %s!" % to)
 		transitioning_to = ""
@@ -164,6 +171,7 @@ func _change_state(state_funcs:Dictionary):
 	
 	#clear the update function, so we don't run it during the transition
 	current_update = update_empty
+	current_fixed_update = update_empty
 
 	if !_current_state_functions.is_empty() && _current_state_functions.exit.is_valid() && \
 	(state_funcs != _current_state_functions || _current_state_functions.allow_reexit):
@@ -184,8 +192,11 @@ func _change_state(state_funcs:Dictionary):
 		await _current_state_functions.enter.call()
 
 	#setup the update and physics functions if they exist
-	if !_current_state_functions.is_empty() && _current_state_functions.update.is_valid() && !stopped:
-		current_update = _current_state_functions.update
+	if !_current_state_functions.is_empty() && !stopped:
+		if _current_state_functions.update.is_valid():
+			current_update = _current_state_functions.update
+		if _current_state_functions.fixed_update.is_valid():
+			current_fixed_update = _current_state_functions.fixed_update
 
 	changing_states = false
 	changed_state.emit()
@@ -194,5 +205,9 @@ func _change_state(state_funcs:Dictionary):
 func update_empty(delta:float): pass
 
 func update(delta:float):
-	if ! stopped:
+	if !stopped:
 		current_update.call(delta)
+
+func fixed_update(delta:float):
+	if !stopped:
+		current_fixed_update.call(delta)
