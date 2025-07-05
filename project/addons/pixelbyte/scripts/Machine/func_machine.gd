@@ -1,5 +1,5 @@
 extends RefCounted
-class_name Machine
+class_name FuncMachine
 
 # Suffixes considered valid state suffixes (_fixed_update must come before _update!)
 const VALID_METHOD_SUFFIXES :Array[StringName] = ["_enter", "_fixed_update", "_update", "_exit"]
@@ -85,7 +85,7 @@ func add(enter:Callable, update:Callable = Callable(), exit:Callable = Callable(
 	map.allow_reexit = call_exit_on_same
 	
 	if _state_map.has(state_name):
-		push_warning("[Machine] Warning: State name '%s' already in map!" % state_name)
+		push_warning("[FuncMachine] Warning: State name '%s' already in map!" % state_name)
 		
 	_state_map[state_name] = map
 	
@@ -93,9 +93,9 @@ func remove(state_func:Callable):
 	var state_name:String = ""
 	state_name = _get_state_name(state_func)
 	if state_name.is_empty():
-		push_warning("[Machine] Warning: Unable to get state name from %s" % state_func.get_method().get_basename())
+		push_warning("[FuncMachine] Warning: Unable to get state name from %s" % state_func.get_method().get_basename())
 	elif !_state_map.has(state_name):
-		push_warning("[Machine] Warning: Map does not contain '%s'" % state_name)
+		push_warning("[FuncMachine] Warning: Map does not contain '%s'" % state_name)
 	else:
 		_state_map.erase(state_name)
 
@@ -114,18 +114,18 @@ func stop():
 
 func lock():
 	if locked:
-		push_warning("state machine is already locked")
+		push_warning("[FuncMachine] already locked")
 	locked = true
 
 func unlock():
 	if locked:
 		locked = false
 	else:
-		push_warning("state machine is not locked")
+		push_warning("[FuncMachine] is not locked")
 
 func change_prev() -> bool:
 	if _previous_state_functions.is_empty():
-		printerr("No previous state recorded!")
+		printerr("[FuncMachine] No previous state recorded!")
 		return false
 	else:
 		#_change_state.call_deferred(_change_state, _previous_state_functions)
@@ -134,10 +134,10 @@ func change_prev() -> bool:
 		
 func change(to:Callable, lock:bool = false):
 	if stopped:
-		push_warning("You must call start() to start the machine!")
+		push_warning("[FuncMachine] Must call start()!")
 		return
 	elif locked:
-		push_warning("'locked' is true. ignoring change %s -> %s" % [current_state_name, _get_state_name(to)])
+		push_warning("[FuncMachine] 'locked' is true. ignoring change %s -> %s" % [current_state_name, _get_state_name(to)])
 		return
 	if lock:
 		locked = true
@@ -146,7 +146,7 @@ func change(to:Callable, lock:bool = false):
 	var state_name = _get_state_name(to)
 	#print("%s => %s" % [current_state_name, state_name])
 	if !_state_map.has(state_name):
-		printerr("Cannot find state: %s!" % to)
+		printerr("[FuncMachine] Cannot find state: %s!" % to)
 		transitioning_to = ""
 		return
 	else:
