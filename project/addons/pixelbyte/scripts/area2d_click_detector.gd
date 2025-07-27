@@ -1,4 +1,4 @@
-class_name ClickableArea
+class_name Area2DClickDetector
 extends Node2D
 
 
@@ -28,7 +28,7 @@ func _on_mouse_exited():
 func _on_collision_input(viewport:Viewport, event:InputEvent, shape_idx:int):
 	if event is InputEventMouseButton:
 		var mbe:InputEventMouseButton = event
-		
+			
 		if mbe.is_pressed():
 			#_update_click_count(mbe.button_index)
 			if mbe.double_click:
