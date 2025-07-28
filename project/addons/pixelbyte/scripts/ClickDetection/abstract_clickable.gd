@@ -17,7 +17,7 @@ func _process_input_events(event: InputEvent) -> void:
 				print("double click")
 				double_clicked.emit(mbe.button_index)
 			else:
+				print("click")
 				clicked.emit(mbe.button_index)
 		elif mbe.is_released():
-			print("click")
 			up.emit(mbe.button_index)

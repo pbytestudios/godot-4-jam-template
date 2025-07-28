@@ -12,5 +12,5 @@ func _ready() -> void:
 	else:
 		printerr("clickable_area is not defined on '%s'!" % name)
 
-func _on_collision_input(viewport:Viewport, event:InputEvent, shape_idx:int):
+func _on_collision_input(camera:Node, event:InputEvent, event_position:Vector3, normal: Vector3, shape_idx:int):
 	_process_input_events(event)
