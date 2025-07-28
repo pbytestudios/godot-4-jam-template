@@ -1,7 +1,7 @@
 @tool
 extends EditorPlugin
 
-var container: VBoxContainer
+var dock: VBoxContainer
 var file_dialog: FileDialog
 
 func _enter_tree():
@@ -10,10 +10,10 @@ func _enter_tree():
 	button.pressed.connect(on_load_palette_pressed)
 	button.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	
-	container = VBoxContainer.new()
-	add_control_to_dock(DOCK_SLOT_LEFT_UL, container)
-	container.add_child(button)
-	container.name = "Palette Loader"
+	dock = VBoxContainer.new()
+	dock.name = "Palette Loader"
+	dock.add_child(button)
+	add_control_to_dock(DOCK_SLOT_LEFT_UL, dock)
 
 	file_dialog = FileDialog.new()
 	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
@@ -27,8 +27,8 @@ func _enter_tree():
 
 
 func _exit_tree():
-	remove_control_from_docks(container)
-	container.free()
+	remove_control_from_docks(dock)
+	dock.free()
 
 
 func load_image_into_palette(path: String):
