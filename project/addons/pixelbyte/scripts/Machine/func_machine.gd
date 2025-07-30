@@ -1,7 +1,7 @@
 extends RefCounted
 class_name FuncMachine
 
-# Suffixes considered valid state suffixes (_fixed_update must come before _update!)
+# Suffixes considered valid state suffixes (_fixed_update must come before _update here or it wil not work!)
 const VALID_METHOD_SUFFIXES :Array[StringName] = ["_enter", "_fixed_update", "_update", "_exit"]
 
 # 2024 Pixelbyte Studios
@@ -39,65 +39,60 @@ var locked:bool = false:
 	get: return locked
 
 # this holds all the states and their functions
-var _state_map = {}
+var _map = {}
 # holds the previous state functions
 var _previous_state_functions:Dictionary = {}
 # holds the current state functions
 var _current_state_functions:Dictionary = {}
 
-# If true, the state machine will call the exit function of the current state even if the next state is the same state
-var _allow_exit_to_same:bool
-# If true, the state machine will call the enter function of the current state even if the next state is the same state
-var _allow_enter_to_same:bool
-
-var current_update:Callable = update_empty
-var current_fixed_update:Callable = update_empty
+var current_update:Callable = _update_empty
+var current_fixed_update:Callable = _update_empty
 
 # emitted AFTER the new state's enter method has been called
 signal changed_state
 
 # function naming: the 'enter' callable will be used to name the state
 # if there is no enter function, then update, then exit
-func add(enter:Callable, update:Callable = Callable(), exit:Callable = Callable(), _fixed_update = Callable(), call_enter_on_same:bool = true, call_exit_on_same:bool = true):
+func add(enter:Callable, _update:Callable = Callable(), exit:Callable = Callable(), _fixed_update = Callable(), call_enter_on_same:bool = true, call_exit_on_same:bool = true):
 	var state_name:String = ""
 	
 	# Get the name of the state by trying the enter function 1st, then the other twqo
 	if enter.is_valid():
 		state_name = _get_state_name(enter)
-	if state_name.is_empty() && update.is_valid():
-		state_name = _get_state_name(update)
+	if state_name.is_empty() && _update.is_valid():
+		state_name = _get_state_name(_update)
 	if state_name.is_empty() && exit.is_valid():
 		state_name = _get_state_name(exit)
 	if state_name.is_empty() && _fixed_update.is_valid():
 		state_name = _get_state_name(_fixed_update)
 
 	#Create a 'map' of this state and its methods
-	var map:Dictionary = {}
-	map.enter = enter
-	map.update = update
-	map.exit = exit
-	map.name = state_name
+	var state_info:Dictionary = {}
+	state_info.enter = enter
+	state_info.update = _update
+	state_info.fixed_update = _fixed_update
+	state_info.exit = exit
+	state_info.name = state_name
 	
-	map.fixed_update = _fixed_update
 	# if true and the next state is the same as the current, it's enter function (if valid) is called
-	map.allow_reentry = call_enter_on_same
+	state_info.allow_reentry = call_enter_on_same
 	# if true and the next state is the same as the current, it's exit function (if valid) is called
-	map.allow_reexit = call_exit_on_same
+	state_info.allow_reexit = call_exit_on_same
 	
-	if _state_map.has(state_name):
-		push_warning("[FuncMachine] Warning: State name '%s' already in map!" % state_name)
+	if _map.has(state_name):
+		push_warning("[FuncMachine] State '%s' already in map!" % state_name)
 		
-	_state_map[state_name] = map
+	_map[state_name] = state_info
 	
 func remove(state_func:Callable):
 	var state_name:String = ""
 	state_name = _get_state_name(state_func)
 	if state_name.is_empty():
-		push_warning("[FuncMachine] Warning: Unable to get state name from %s" % state_func.get_method().get_basename())
-	elif !_state_map.has(state_name):
-		push_warning("[FuncMachine] Warning: Map does not contain '%s'" % state_name)
+		push_warning("[FuncMachine] Unable to get state name from %s" % state_func.get_method().get_basename())
+	elif !_map.has(state_name):
+		push_warning("[FuncMachine] Map does not contain '%s'" % state_name)
 	else:
-		_state_map.erase(state_name)
+		_map.erase(state_name)
 
 ## Starts the state machine with the given state
 func start(starting:Callable):
@@ -112,47 +107,41 @@ func stop():
 	current_state_name = ""
 	_change_state({})
 
-func lock():
-	if locked:
-		push_warning("[FuncMachine] already locked")
-	locked = true
-
-func unlock():
-	if locked:
-		locked = false
-	else:
-		push_warning("[FuncMachine] is not locked")
+func lock(): locked = true
+func unlock(): locked = false
 
 func change_prev() -> bool:
 	if _previous_state_functions.is_empty():
-		printerr("[FuncMachine] No previous state recorded!")
+		printerr("[FuncMachine]: No previous state recorded!")
 		return false
 	else:
 		#_change_state.call_deferred(_change_state, _previous_state_functions)
 		_change_state(_previous_state_functions)
 		return true
 		
-func change(to:Callable, lock:bool = false):
+func change(to:Callable, _lock:bool = false):
 	if stopped:
-		push_warning("[FuncMachine] Must call start()!")
+		push_warning("[FuncMachine]: call start() to start the machine!")
 		return
 	elif locked:
-		push_warning("[FuncMachine] 'locked' is true. ignoring change %s -> %s" % [current_state_name, _get_state_name(to)])
+		push_warning("[FuncMachine]:'locked' is true. ignoring change %s -> %s" % [current_state_name, _get_state_name(to)])
 		return
-	if lock:
-		locked = true
+	
+	locked = _lock
 	
 	
 	var state_name = _get_state_name(to)
 	#print("%s => %s" % [current_state_name, state_name])
-	if !_state_map.has(state_name):
-		printerr("[FuncMachine] Cannot find state: %s!" % to)
+	if !_map.has(state_name):
+		printerr("[FuncMachine]:Cannot find state: %s!" % to)
 		transitioning_to = ""
 		return
-	else:
-		transitioning_to = state_name
-	
-	await _change_state(_state_map[state_name])
+	if state_name == current_state_name:
+		printerr("[FuncMachine]:Cannot change to the same state '%s'!" % state_name)
+		return
+
+	transitioning_to = state_name
+	await _change_state(_map[state_name])
 
 func _get_state_name(callable:Callable) -> String: 
 	var name:String = ""
@@ -170,8 +159,8 @@ func _change_state(state_funcs:Dictionary):
 	changing_states = true
 	
 	#clear the update function, so we don't run it during the transition
-	current_update = update_empty
-	current_fixed_update = update_empty
+	current_update = _update_empty
+	current_fixed_update = _update_empty
 
 	if !_current_state_functions.is_empty() && _current_state_functions.exit.is_valid() && \
 	(state_funcs != _current_state_functions || _current_state_functions.allow_reexit):
@@ -187,9 +176,9 @@ func _change_state(state_funcs:Dictionary):
 	#print(state_funcs)
 	
 	#call the new state's enter if there is one
-	if !_current_state_functions.is_empty() && _current_state_functions.enter.is_valid() &&\
-	(state_funcs != _current_state_functions || _current_state_functions.allow_reentry):
-		await _current_state_functions.enter.call()
+	if !state_funcs.is_empty() && state_funcs.enter.is_valid() &&\
+	(state_funcs != state_funcs || state_funcs.allow_reentry):
+		await state_funcs.enter.call()
 
 	#setup the update and physics functions if they exist
 	if !_current_state_functions.is_empty() && !stopped:
@@ -202,12 +191,14 @@ func _change_state(state_funcs:Dictionary):
 	changed_state.emit()
 
 #an empty update function
-func update_empty(delta:float): pass
+func _update_empty(delta:float): pass
 
+## Call this function in your script's _process()
 func update(delta:float):
 	if !stopped && !changing_states:
 		current_update.call(delta)
 
+## Call this function in your script's fixed_process()
 func fixed_update(delta:float):
 	if !stopped && !changing_states:
 		current_fixed_update.call(delta)

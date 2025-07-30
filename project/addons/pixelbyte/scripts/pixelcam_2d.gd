@@ -91,7 +91,7 @@ func zoom_to_limits(limits:Rect2, set_center:bool = true):
 #zoom camera in/out to fit the size of the rect
 func zoom_to_fit(fit_rect:Rect2, minRect:Rect2 = Rect2(Vector2.ZERO,Vector2.ZERO)):
 	#Get the center of the fit rect
-	var rect_center = fit_rect.get_center()	
+	var rect_center = fit_rect.get_center()
 	
 	#Don't go any smaller than the min rect
 	fit_rect = fit_rect.merge(minRect)
