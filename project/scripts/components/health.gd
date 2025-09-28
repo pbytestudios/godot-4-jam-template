@@ -3,7 +3,7 @@ class_name Health
 
 signal depleated
 signal max_set(val:float)
-signal changed(new_val:float)
+signal changed(new_val:float, max:float)
 
 @export var max_value:int = 10:
 	get: return max_value
@@ -33,7 +33,7 @@ func modify(amount:float) -> bool:
 	
 	prev = value
 	value = clamp(value + amount, 0.0, max_value)
-	changed.emit(value)
+	changed.emit(value, max_value)
 	
 	if value <= 0.0:
 		depleated.emit()
