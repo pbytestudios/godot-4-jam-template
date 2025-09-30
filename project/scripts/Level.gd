@@ -2,7 +2,6 @@ class_name Level
 extends Node
 
 @export_multiline var title = ""
-@export_multiline var speech = ""
 
 var player:Player:
 	get: return player
