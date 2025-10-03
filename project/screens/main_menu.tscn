@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://515wywnqk3dk" path="res://addons/pixelbyte/ui/ui_effect.gd" id="2_amggq"]
 [ext_resource type="PackedScene" uid="uid://c5kgexy2oxhl7" path="res://addons/pixelbyte/ui/settings/SettingsPanel.tscn" id="2_qg155"]
 [ext_resource type="Theme" uid="uid://xmc81e5e5jw7" path="res://jam_theme.tres" id="2_wu0qq"]
-[ext_resource type="Script" uid="uid://dmg556334w7v" path="res://addons/pixelbyte/scripts/PixelCam2D.gd" id="3_pp7n8"]
+[ext_resource type="Script" uid="uid://cdkjf4ecu72s3" path="res://addons/pixelbyte/scripts/pixelcam_2d.gd" id="3_pp7n8"]
 
 [node name="MainMenu" type="Node2D" node_paths=PackedStringArray("menu_effects")]
 script = ExtResource("1_jusar")
