@@ -1,8 +1,8 @@
 [gd_scene load_steps=9 format=3 uid="uid://ch2tv5qhankyn"]
 
-[ext_resource type="Script" path="res://addons/pixelbyte/ui/wiper.gd" id="1_wjie8"]
+[ext_resource type="Script" uid="uid://bov4wmpiafi20" path="res://addons/pixelbyte/ui/autoloads/wiper.gd" id="1_wjie8"]
 [ext_resource type="Texture2D" uid="uid://bfskmuetl237p" path="res://gfx/gradients/Angled_01-256x256.png" id="2_kd5xd"]
-[ext_resource type="Shader" path="res://addons/pixelbyte/shaders/alpha_wipe.gdshader" id="3_xxai8"]
+[ext_resource type="Shader" uid="uid://vc77xbyrrstg" path="res://addons/pixelbyte/shaders/alpha_wipe.gdshader" id="3_xxai8"]
 
 [sub_resource type="Animation" id="Animation_iqedk"]
 tracks/0/type = "value"

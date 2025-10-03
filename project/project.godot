@@ -17,7 +17,7 @@ boot_splash/show_image=false
 
 [autoload]
 
-Wiper="*res://addons/pixelbyte/ui/wiper.tscn"
+Wiper="*res://addons/pixelbyte/ui/autoloads/wiper.tscn"
 InteractMgr="*res://addons/pixelbyte/ui/Interaction/InteractMgr.tscn"
 Events="*res://scripts/autoloads/Events.gd"
 SpeechBox="*res://test_stuff/scenes/SpeechBox.tscn"
