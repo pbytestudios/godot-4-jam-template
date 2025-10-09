@@ -13,6 +13,13 @@ signal changed(new_val:float)
 
 var value:float = 0:
 	get: return value
+	set(val):
+		val = clamp(val, 0.0, max_value)
+		prev = value
+		value = val
+		changed.emit(value)
+		if prev != 0.0 && value == 0.0:
+			depleated.emit()
 
 var prev:float = 0:
 	get: return prev
@@ -27,15 +34,3 @@ func _ready():
 func reset(): 
 	value = max_value
 	prev = value
-
-func modify(amount:float) -> bool:
-	if value <= 0:
-		return false
-	
-	prev = value
-	value = clamp(value + amount, 0.0, max_value)
-	changed.emit(value)
-	
-	if value <= 0.0:
-		depleated.emit()
-	return true

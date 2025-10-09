@@ -138,6 +138,7 @@ func change(to:Callable, _lock:bool = false):
 		return
 	if state_name == current_state_name:
 		printerr("[FuncMachine]:Cannot change to the same state '%s'!" % state_name)
+		#print_stack()
 		return
 
 	transitioning_to = state_name

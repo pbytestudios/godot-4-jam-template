@@ -22,6 +22,10 @@ func _ready() -> void:
 func _receive_int(val:int):
 	text = "%s%d%s" % [prefix, val, suffix]
 	start_fade()
+
+func _receive_float_to_int(val:float):
+	text = "%s%d%s" % [prefix, val, suffix]
+	start_fade()
 	
 func _receive_float(val:float):
 	text = "%s%.2f%s" % [prefix, val, suffix]
