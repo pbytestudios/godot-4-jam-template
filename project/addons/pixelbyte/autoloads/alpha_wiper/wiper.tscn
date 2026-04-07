@@ -1,14 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://ch2tv5qhankyn"]
+[gd_scene load_steps=8 format=3 uid="uid://ch2tv5qhankyn"]
 
-[ext_resource type="Script" uid="uid://bov4wmpiafi20" path="res://addons/pixelbyte/ui/autoloads/wiper.gd" id="1_wjie8"]
-[ext_resource type="Texture2D" uid="uid://bfskmuetl237p" path="res://gfx/gradients/Angled_01-256x256.png" id="2_kd5xd"]
-[ext_resource type="Shader" uid="uid://vc77xbyrrstg" path="res://addons/pixelbyte/shaders/alpha_wipe.gdshader" id="3_xxai8"]
+[ext_resource type="Script" uid="uid://14vahuouqcw2" path="res://addons/pixelbyte/autoloads/alpha_wiper/wiper.gd" id="1_wjie8"]
+[ext_resource type="Shader" uid="uid://c2ib68wxchmor" path="res://addons/pixelbyte/autoloads/alpha_wiper/alpha_wipe.gdshader" id="2_c0n1x"]
 
 [sub_resource type="Animation" id="Animation_iqedk"]
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("WipeRect:material:shader_parameter/dissolve_value")
+tracks/0/path = NodePath("WipeRect:material:shader_parameter/progress")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -23,7 +22,7 @@ resource_name = "wipe"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("WipeRect:material:shader_parameter/dissolve_value")
+tracks/0/path = NodePath("WipeRect:material:shader_parameter/progress")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -35,15 +34,15 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_lmpaw"]
 _data = {
-"RESET": SubResource("Animation_iqedk"),
-"wipe": SubResource("Animation_4y1ac")
+&"RESET": SubResource("Animation_iqedk"),
+&"wipe": SubResource("Animation_4y1ac")
 }
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4gd8k"]
-shader = ExtResource("3_xxai8")
-shader_parameter/dissolve_value = 0.0
-shader_parameter/wipe_color = null
-shader_parameter/use_alpha = false
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b1c8g"]
+shader = ExtResource("2_c0n1x")
+shader_parameter/wipe_alpha_only = 0.0
+shader_parameter/progress = 0.0
+shader_parameter/wipe_color = Color(0, 0, 0, 1)
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_yh4b6"]
 random_pitch = 1.1
@@ -57,15 +56,14 @@ wipe_rect = NodePath("WipeRect")
 wipe_sound = NodePath("Wipe")
 unwipe_sound = NodePath("Unwipe")
 wipe_speed = 0.5
-default_wipe_texture = ExtResource("2_kd5xd")
 
 [node name="AnimPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_lmpaw")
+&"": SubResource("AnimationLibrary_lmpaw")
 }
 
 [node name="WipeRect" type="ColorRect" parent="."]
-material = SubResource("ShaderMaterial_4gd8k")
+material = SubResource("ShaderMaterial_b1c8g")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -76,8 +74,6 @@ color = Color(1, 1, 1, 0)
 
 [node name="Wipe" type="AudioStreamPlayer2D" parent="."]
 stream = SubResource("AudioStreamRandomizer_yh4b6")
-bus = &"Sfx"
 
 [node name="Unwipe" type="AudioStreamPlayer2D" parent="."]
 stream = SubResource("AudioStreamRandomizer_yh4b6")
-bus = &"Sfx"

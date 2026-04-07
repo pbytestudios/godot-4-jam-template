@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cawl5krs8qel6"]
+[gd_scene format=3 uid="uid://cawl5krs8qel6"]
 
 [ext_resource type="Script" uid="uid://317xssaj8ifm" path="res://screens/main_menu.gd" id="1_jusar"]
 [ext_resource type="Script" uid="uid://515wywnqk3dk" path="res://addons/pixelbyte/ui/ui_effect.gd" id="2_amggq"]
@@ -6,13 +6,14 @@
 [ext_resource type="Theme" uid="uid://xmc81e5e5jw7" path="res://jam_theme.tres" id="2_wu0qq"]
 [ext_resource type="Script" uid="uid://cdkjf4ecu72s3" path="res://addons/pixelbyte/scripts/pixelcam_2d.gd" id="3_pp7n8"]
 
-[node name="MainMenu" type="Node2D" node_paths=PackedStringArray("menu_effects")]
+[node name="MainMenu" type="Node2D" unique_id=1108645600 node_paths=PackedStringArray("title_label", "menu_effects")]
 script = ExtResource("1_jusar")
+title_label = NodePath("Ui/MainMenu/MarginContainer/VBoxContainer/Title")
 menu_effects = NodePath("Ui/ControlEffects/MainMenuEffects")
 
-[node name="Ui" type="CanvasLayer" parent="."]
+[node name="Ui" type="CanvasLayer" parent="." unique_id=212256729]
 
-[node name="TextureRect" type="TextureRect" parent="Ui"]
+[node name="TextureRect" type="TextureRect" parent="Ui" unique_id=1638183583]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,7 +22,7 @@ grow_horizontal = 2
 grow_vertical = 2
 expand_mode = 1
 
-[node name="ColorRect2" type="ColorRect" parent="Ui"]
+[node name="ColorRect2" type="ColorRect" parent="Ui" unique_id=1994926340]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -29,13 +30,14 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.18039216, 0.11764706, 0.36078432, 1)
 
-[node name="MainMenu" type="PanelContainer" parent="Ui"]
+[node name="MainMenu" type="PanelContainer" parent="Ui" unique_id=947821976]
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -214.0
+offset_left = -216.0
 offset_top = 40.0
+offset_right = -1.9995117
 offset_bottom = -35.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -43,19 +45,19 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 theme = ExtResource("2_wu0qq")
 
-[node name="MarginContainer" type="MarginContainer" parent="Ui/MainMenu"]
+[node name="MarginContainer" type="MarginContainer" parent="Ui/MainMenu" unique_id=1589026630]
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Ui/MainMenu/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Ui/MainMenu/MarginContainer" unique_id=1212309298]
 layout_mode = 2
 mouse_filter = 0
 theme_override_constants/separation = 16
 
-[node name="Title" type="Label" parent="Ui/MainMenu/MarginContainer/VBoxContainer"]
+[node name="Title" type="Label" parent="Ui/MainMenu/MarginContainer/VBoxContainer" unique_id=1444729605]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 40
@@ -63,14 +65,14 @@ text = "Menu"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Play" type="Button" parent="Ui/MainMenu/MarginContainer/VBoxContainer"]
+[node name="Play" type="Button" parent="Ui/MainMenu/MarginContainer/VBoxContainer" unique_id=111333360]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
 text = "Play
 "
 
-[node name="Continue" type="Button" parent="Ui/MainMenu/MarginContainer/VBoxContainer"]
+[node name="Continue" type="Button" parent="Ui/MainMenu/MarginContainer/VBoxContainer" unique_id=870382105]
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
@@ -78,20 +80,20 @@ theme_override_font_sizes/font_size = 30
 text = "Continue
 "
 
-[node name="Settings" type="Button" parent="Ui/MainMenu/MarginContainer/VBoxContainer"]
+[node name="Settings" type="Button" parent="Ui/MainMenu/MarginContainer/VBoxContainer" unique_id=738564381]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
 text = "Settings
 "
 
-[node name="Exit" type="Button" parent="Ui/MainMenu/MarginContainer/VBoxContainer"]
+[node name="Exit" type="Button" parent="Ui/MainMenu/MarginContainer/VBoxContainer" unique_id=1545112305]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
 text = "Quit"
 
-[node name="ColorRect" type="ColorRect" parent="Ui"]
+[node name="ColorRect" type="ColorRect" parent="Ui" unique_id=245660344]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -100,7 +102,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.623529)
 
-[node name="SettingsPanel" parent="Ui" node_paths=PackedStringArray("veil") instance=ExtResource("2_qg155")]
+[node name="SettingsPanel" parent="Ui" unique_id=1881494105 node_paths=PackedStringArray("veil") instance=ExtResource("2_qg155")]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -111,29 +113,32 @@ offset_right = 272.0
 offset_bottom = 117.0
 veil = NodePath("../ColorRect")
 
-[node name="PixelCam2D" type="Camera2D" parent="Ui"]
+[node name="PixelCam2D" type="Camera2D" parent="Ui" unique_id=890071085]
 anchor_mode = 0
 script = ExtResource("3_pp7n8")
 
-[node name="ControlEffects" type="Node2D" parent="Ui"]
+[node name="ControlEffects" type="Control" parent="Ui" unique_id=1512052199]
+layout_mode = 3
+anchors_preset = 0
 
-[node name="MainMenuEffects" type="Node2D" parent="Ui/ControlEffects" node_paths=PackedStringArray("target", "start", "mark")]
-position = Vector2(640, 39)
+[node name="MainMenuEffects" type="Control" parent="Ui/ControlEffects" unique_id=961063382 node_paths=PackedStringArray("target", "start", "mark")]
+anchors_preset = 0
+offset_left = 640.0
+offset_top = 39.0
+offset_right = 640.0
+offset_bottom = 39.0
 script = ExtResource("2_amggq")
 target = NodePath("../../MainMenu")
 start = NodePath("Start")
 mark = NodePath("Mark")
-tween_play_time = 0.75
-tween_reverse_time = 0.75
-tween_mode = 3
-play_ease = 1
-tween_trans = 3
+tween_play_time = 0.5
+tween_mode = 2
 
-[node name="Mark" type="Marker2D" parent="Ui/ControlEffects/MainMenuEffects"]
-position = Vector2(0, 1)
+[node name="Mark" type="Marker2D" parent="Ui/ControlEffects/MainMenuEffects" unique_id=73792707]
+position = Vector2(8, 1)
 
-[node name="Start" type="Marker2D" parent="Ui/ControlEffects/MainMenuEffects"]
-position = Vector2(-214, 1)
+[node name="Start" type="Marker2D" parent="Ui/ControlEffects/MainMenuEffects" unique_id=1181512876]
+position = Vector2(-216, 1)
 
 [connection signal="pressed" from="Ui/MainMenu/MarginContainer/VBoxContainer/Play" to="." method="_on_play"]
 [connection signal="pressed" from="Ui/MainMenu/MarginContainer/VBoxContainer/Settings" to="." method="_on_settings"]

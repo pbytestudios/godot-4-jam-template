@@ -1,9 +1,9 @@
 @tool
 class_name UIEffect
-extends Node2D
+extends Control
 
 enum Mode {None, ToMark, FromMark, FadeIn, FadeOut, ScaleIn}
-enum State {Ready, Played}
+enum State {Ready, Playing, Reversing, Played}
 
 @export var target:Control
 @export var start:Marker2D
@@ -22,6 +22,12 @@ enum State {Ready, Played}
 
 var state:State = State.Ready:
 	get: return state
+
+var is_played: bool:
+	get: return state == State.Played
+
+var is_ready: bool:
+	get: return state == State.Ready
 
 var _start_pos:Vector2:
 	get: return start.global_position
@@ -81,7 +87,7 @@ func _update_play_mode():
 			_reverse = Callable()
 
 func _do_tween(property:String, ease:Tween.EaseType, value, time:float):
-	if _tw && _tw.is_running():
+	if is_instance_valid(_tw):
 		_tw.kill()
 
 	_tw = create_tween().set_ease(ease).set_trans(tween_trans)
@@ -89,7 +95,7 @@ func _do_tween(property:String, ease:Tween.EaseType, value, time:float):
 	_tw.tween_callback(_on_tween_finished)
 
 func _on_tween_finished():
-	if state == State.Ready:
+	if state == State.Playing:
 		state = State.Played
 	else:
 		state = State.Ready
@@ -103,6 +109,7 @@ func _fade(ease:Tween.EaseType, start_alpha:float, stop_alpha:float, time:float)
 
 func play(): 
 	if _play.is_valid():
+		state = State.Playing
 		_play.call()
 	else:
 		_on_tween_finished()
@@ -110,6 +117,7 @@ func play():
 
 func reverse(): 
 	if _reverse.is_valid():
+		state = State.Reversing
 		_reverse.call()
 	else:
 		_on_tween_finished()
@@ -121,8 +129,16 @@ func reverse():
 @export_tool_button("Play Tween", "Play") var play_action = play_tween
 
 func set_mark():
-	if !_finishing && Engine.is_editor_hint() && is_instance_valid(target):
-		mark.global_position = target.global_position
+	if !_finishing && Engine.is_editor_hint() && is_instance_valid(target) && is_instance_valid(mark):
+		var editor_interface = Engine.get_singleton("EditorInterface")
+		if editor_interface == null:
+			return
+		var undoredo = editor_interface.get_editor_undo_redo()
+		undoredo.create_action("Set Effect Mark")
+		undoredo.add_undo_property(mark, "global_position", mark.global_position)
+		undoredo.add_do_property(mark, "global_position", target.global_position)
+		undoredo.commit_action() 
+		#mark.global_position = target.global_position
 		
 func play_tween():
 	if _finishing || !Engine.is_editor_hint() || (is_instance_valid(_tw) && _tw.is_running()):

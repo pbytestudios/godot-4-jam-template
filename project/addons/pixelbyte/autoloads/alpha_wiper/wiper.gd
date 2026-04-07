@@ -4,16 +4,10 @@ extends CanvasLayer
 signal wiped
 ## emitted when the screen is fully "unwiped" i.e. you can see the screen
 signal unwiped
-
+## emitted when the scene has been changed after wipe completed
 signal wiped_to_scene
 
-var is_wiped:bool:
-	get: return $WipeRect.material.get_shader_parameter("dissolve_value") == 1.0
-
-# true when the wiper is wiping
-var wiping:bool:
-	get: return wiping
-
+#region Exported variables
 ## if true, then the wipe texture will be ignored and a simple alpha fade will be performed in the given wipe_color
 @export var fade_mode:bool = false:
 	get: return fade_mode
@@ -21,15 +15,15 @@ var wiping:bool:
 		fade_mode = val
 		if !is_node_ready():
 			await ready
-		wipe_rect.material.set_shader_parameter("use_alpha", val)
+		wipe_rect.material.set_shader_parameter("wipe_alpha_only", val)
 
 ## animation player containing a "wipe" (and optionally an "unwipe") animation
 @export var anim:AnimationPlayer
+
 ## The ColorRect on which to operate
-
 @export var wipe_rect:ColorRect
-## An optional transition sound
 
+## An optional transition sound
 @export var wipe_sound:AudioStreamPlayer
 ## An optional transition sound
 @export var unwipe_sound:AudioStreamPlayer
@@ -53,8 +47,7 @@ var wiping:bool:
 	set(val): wipe_speed = val
 	
 ## The default texture to use in the shader for fading
-@export var default_wipe_texture:Texture2D
-		
+@export var default_wipe_texture:Texture2D 
 #
 # Alpha texture used for the wipe
 #
@@ -66,7 +59,33 @@ var wiping:bool:
 		else:
 			wipe_texture = val
 		wipe_rect.material.set_shader_parameter("wipe_texture", wipe_texture)
-			
+		if wipe_texture:
+			wipe_rect.material.set_shader_parameter("wipe_alpha_only", 0.0)
+		else:
+			wipe_rect.material.set_shader_parameter("wipe_alpha_only", 1.0)
+#endregion
+
+#region Properties
+var is_wiped:bool:
+	get: return wipe_rect.material.get_shader_parameter("progress") == 1.0
+
+# true when the wiper is wiping
+var wiping:bool:
+	get: return wiping
+#endregion
+
+#var _tween:Tween
+#
+#func _tween_progress(finish:float, time:float):
+	#if _tween:
+		#_tween.kill()
+	#_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_LINEAR)
+	#var start:float =  wipe_rect.material.get_shader_parameter("progress")
+	#var speed:float = abs(finish - start) / time
+	 #if speed == 0.0:
+		#
+	#_tween.tween_property(wipe_rect.material, "progress", finish, )
+	
 # if the animation player has an "unwipe" anim, we'll use it for unwipe,
 # otherwise we just play "wipe" in reverse
 var has_unwipe_anim: bool
@@ -75,41 +94,36 @@ func _ready() -> void:
 	wipe_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	has_unwipe_anim = anim.has_animation("unwipe")
 	wipe_texture = default_wipe_texture
+	anim.animation_finished.connect(_anim_finished)
 	
-	if default_wipe_texture == null:
-		printerr("No default wipe texture selected. Be sure to set 'wipe_texture'!")
+	#print("wiping")
+	#await wipe().wiped
+	#print("done")
+	#await unwipe().unwiped
 
 # wipes the screen
 # awaitable: await wipe()
 func wipe():
 	wiping = true
 	if anim.is_playing() && anim.current_animation == "unwipe":
-			anim.stop()
+		anim.stop()
 	
 	wipe_rect.mouse_filter = Control.MOUSE_FILTER_STOP
 	if !anim.is_playing() or anim.current_animation != "wipe":
 		anim.play("wipe", -1, 1.0 / wipe_speed)
 		if wipe_sound:
 			wipe_sound.play_rnd()
-			
-	await anim.animation_finished
-	wiping = false
-	wiped.emit()
+	return self
 
 func wipe_immediate():
 	if anim.is_playing():
 		anim.stop()
-	
-	wipe_rect.mouse_filter = Control.MOUSE_FILTER_STOP
-	$WipeRect.material.set_shader_parameter("dissolve_value", 1.0)
-	wiping = false
+	_wipe_finished()
 	
 func unwipe_immediate():
 	if anim.is_playing():
 		anim.stop()
-	wipe_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	$WipeRect.material.set_shader_parameter("dissolve_value", 0.0)
-	wiping = false
+	_unwipe_finished()
 	
 # unwipes the screen
 # awaitable: await unwipe()
@@ -124,10 +138,22 @@ func unwipe():
 		anim.play("wipe", -1, -1.0 / wipe_speed, true)
 		
 	if unwipe_sound:
-		unwipe_sound.play_rnd()
-		
-	await anim.animation_finished
+		unwipe_sound.play_rnd()	
+	return self
+
+func _anim_finished(animName:StringName):
+	var val:float =  wipe_rect.material.get_shader_parameter("progress")
+	if val > 0.99:
+		_wipe_finished()
+	else:
+		_unwipe_finished()
 	
+func _wipe_finished():
+	wipe_rect.mouse_filter = Control.MOUSE_FILTER_STOP
+	wiping = false
+	wiped.emit()
+	
+func _unwipe_finished():
 	wipe_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	wiping = false
 	unwiped.emit()
@@ -135,32 +161,32 @@ func unwipe():
 # wipes loads another scene, then un-wipes
 # awaitable: await wipe_to_scene()
 func wipe_to_scene(scene_path:String, delay:float = 0, _unwipe:bool = false):
-	await wipe()
-	Scene.change(get_tree(), scene_path)
+	if !is_wiped:
+		await wipe().wiped
+	get_tree().change_scene_to_file(scene_path)
 	
 	if _unwipe:
 		if delay > 0:
 			await get_tree().create_timer(delay).timeout
-		await unwipe()
-		
+		await unwipe().unwiped
 	wiped_to_scene.emit()
 
 func wipe_reload(delay:float = 0):
-	await wipe()
+	if !is_wiped:
+		await wipe().wiped
 	get_tree().reload_current_scene()
 	
 	if delay > 0:
 		await get_tree().create_timer(delay).timeout
-		await unwipe()
-		
+	await unwipe().unwiped
 	wiped_to_scene.emit()
 	
 func wipe_to_packed(scene:PackedScene, delay: float = 0, _unwipe:bool = false):
-	await wipe()
-	Scene.change_packed(get_tree(), scene)
+	if !is_wiped:
+		await wipe().wiped
+	get_tree().change_scene_to_packed(scene)
 	if _unwipe:
 		if delay > 0:
 			await get_tree().create_timer(delay).timeout
-		await unwipe()
-		
+		await unwipe().unwiped
 	wiped_to_scene.emit()

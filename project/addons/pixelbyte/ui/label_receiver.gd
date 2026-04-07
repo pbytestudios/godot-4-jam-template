@@ -2,14 +2,16 @@ extends Label
 
 enum LabelReadyState {None, ClearOnReady, PrefixOnReady}
 
-@export var prefix:String = ""
+#multiline so we can add a newline at the end if we wish
+@export_multiline var prefix:String = ""
 @export var suffix:String = ""
 
 @export var fade_time:float = 0.0
 @export var wait_to_fade_time:float = 0.0
 
 @export var label_ready_state:LabelReadyState = LabelReadyState.None
-
+#if true, then an empty string() will make the label invisible
+@export var empty_string_invisible:bool = false
 func _ready() -> void:
 	match label_ready_state:
 		LabelReadyState.ClearOnReady:
@@ -32,8 +34,10 @@ func _receive_float(val:float):
 	start_fade()
 
 func _receive_str(val:String):
+	visible = !empty_string_invisible || !val.is_empty()
 	text = "%s%s%s" % [prefix, val, suffix]
-	start_fade()
+	if visible:
+		start_fade()
 
 func start_fade():
 	if wait_to_fade_time > 0:
