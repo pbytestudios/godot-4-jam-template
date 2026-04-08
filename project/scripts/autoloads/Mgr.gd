@@ -3,14 +3,14 @@ extends Node
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	
-func stutter(duration:float = 0.075):
+func stutter(duration:float = 0.075) -> void:
 	if duration <= 0:
 		return
 	get_tree().paused = true
 	await get_tree().create_timer(duration, true, false, true).timeout
 	get_tree().paused = false
 
-func scale_time(scale:float = 1.0, duration:float = 0.075):
+func scale_time(scale:float = 1.0, duration:float = 0.075) -> void:
 	if duration <= 0:
 		return
 	scale = clampf(scale, -2.0, 2.0)
@@ -18,7 +18,7 @@ func scale_time(scale:float = 1.0, duration:float = 0.075):
 	await get_tree().create_timer(duration, true, false, true).timeout
 	Engine.time_scale = 1.0
 
-func set_text(n:Node2D, txt:String, global_position:Vector2, fade_time:float = 1.5, move_vel:Vector2 = Vector2.UP * 20):
+func set_text(n:Node2D, txt:String, global_position:Vector2, fade_time:float = 1.5, move_vel:Vector2 = Vector2.UP * 20) -> void:
 	var label:FloatText = FloatText.new()
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

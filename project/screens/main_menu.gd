@@ -5,11 +5,10 @@ extends Node2D
 @export var menu_effects:UIEffect
 
 func _ready():
-	if !Engine.is_editor_hint():
+	#if !Engine.is_editor_hint():
 		#Wiper.wipe_speed = 0.5
-		Wiper.wipe_immediate()
-		await Wiper.unwipe()
-		
+	Wiper.wipe_immediate()
+	await Wiper.unwipe().unwiped
 	await menu_effects.play().finished
 	
 	if OS.get_name() == "Web":
@@ -42,5 +41,5 @@ func _on_settings():
 func _on_exit():
 	disable_buttons()
 	await menu_effects.reverse().finished
-	await Wiper.wipe()
+	await Wiper.wipe().wiped
 	get_tree().quit()

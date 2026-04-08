@@ -7,6 +7,8 @@ signal unwiped
 ## emitted when the scene has been changed after wipe completed
 signal wiped_to_scene
 
+enum State {None, Wiping, Wiped, Unwiping, Unwiped}
+
 #region Exported variables
 ## if true, then the wipe texture will be ignored and a simple alpha fade will be performed in the given wipe_color
 @export var fade_mode:bool = false:
@@ -66,12 +68,36 @@ signal wiped_to_scene
 #endregion
 
 #region Properties
+var state:State = State.None:
+	get: return state
+	set(val):
+		if val != state:
+			state = val
+			match state:
+				State.None:
+					wipe_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				State.Wiping:
+					wipe_rect.mouse_filter = Control.MOUSE_FILTER_STOP
+				#State.Unwiping:
+				State.Wiped:
+					if anim && anim.is_playing():
+						anim.stop()
+					wipe_rect.material.set_shader_parameter("progress", 1.0)
+					wipe_rect.mouse_filter = Control.MOUSE_FILTER_STOP
+					wiped.emit()
+				State.Unwiped:
+					if anim && anim.is_playing():
+						anim.stop()
+					wipe_rect.material.set_shader_parameter("progress", 0.0)
+					wipe_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+					unwiped.emit()
+					
 var is_wiped:bool:
-	get: return wipe_rect.material.get_shader_parameter("progress") == 1.0
+	get: return state == State.Wiped
 
 # true when the wiper is wiping
-var wiping:bool:
-	get: return wiping
+var wiping_or_unwiping:bool:
+	get: return state == State.Wiping || state == State.Unwiping
 #endregion
 
 #var _tween:Tween
@@ -104,31 +130,23 @@ func _ready() -> void:
 # wipes the screen
 # awaitable: await wipe()
 func wipe():
-	wiping = true
+	state = State.Wiping
 	if anim.is_playing() && anim.current_animation == "unwipe":
 		anim.stop()
 	
-	wipe_rect.mouse_filter = Control.MOUSE_FILTER_STOP
 	if !anim.is_playing() or anim.current_animation != "wipe":
 		anim.play("wipe", -1, 1.0 / wipe_speed)
 		if wipe_sound:
 			wipe_sound.play_rnd()
 	return self
 
-func wipe_immediate():
-	if anim.is_playing():
-		anim.stop()
-	_wipe_finished()
-	
-func unwipe_immediate():
-	if anim.is_playing():
-		anim.stop()
-	_unwipe_finished()
+func wipe_immediate(): state = State.Wiped
+func unwipe_immediate(): state = State.Unwiped
 	
 # unwipes the screen
 # awaitable: await unwipe()
 func unwipe():
-	wiping = true
+	state = State.Unwiping
 	if anim.is_playing():
 		anim.stop()
 	
@@ -138,25 +156,15 @@ func unwipe():
 		anim.play("wipe", -1, -1.0 / wipe_speed, true)
 		
 	if unwipe_sound:
-		unwipe_sound.play_rnd()	
+		unwipe_sound.play_rnd()
 	return self
 
 func _anim_finished(animName:StringName):
 	var val:float =  wipe_rect.material.get_shader_parameter("progress")
 	if val > 0.99:
-		_wipe_finished()
+		wipe_immediate()
 	else:
-		_unwipe_finished()
-	
-func _wipe_finished():
-	wipe_rect.mouse_filter = Control.MOUSE_FILTER_STOP
-	wiping = false
-	wiped.emit()
-	
-func _unwipe_finished():
-	wipe_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	wiping = false
-	unwiped.emit()
+		unwipe_immediate()
 
 # wipes loads another scene, then un-wipes
 # awaitable: await wipe_to_scene()

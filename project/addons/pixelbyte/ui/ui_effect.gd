@@ -66,8 +66,8 @@ func _update_play_mode():
 			_play = func(): _do_tween("global_position", play_ease, _mark_pos, tween_play_time)
 			_reverse = func(): _do_tween("global_position",reverse_ease, _start_pos, tween_reverse_time)
 		Mode.FromMark:
+			target.global_position = _mark_pos
 			_play = func():
-				target.global_position = _mark_pos
 				_do_tween("global_position", play_ease, _start_pos, tween_play_time)
 			_reverse = func(): _do_tween("global_position", reverse_ease, _mark_pos, tween_reverse_time)
 		Mode.FadeIn:
