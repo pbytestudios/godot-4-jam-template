@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://317xssaj8ifm" path="res://screens/main_menu.gd" id="1_jusar"]
 [ext_resource type="Script" uid="uid://515wywnqk3dk" path="res://addons/pixelbyte/ui/ui_effect.gd" id="2_amggq"]
-[ext_resource type="PackedScene" uid="uid://c5kgexy2oxhl7" path="res://addons/pixelbyte/ui/settings/SettingsPanel.tscn" id="2_qg155"]
+[ext_resource type="PackedScene" uid="uid://c5kgexy2oxhl7" path="res://addons/pixelbyte/ui/settings/settings_panel.tscn" id="2_qg155"]
 [ext_resource type="Theme" uid="uid://xmc81e5e5jw7" path="res://jam_theme.tres" id="2_wu0qq"]
 [ext_resource type="Script" uid="uid://cdkjf4ecu72s3" path="res://addons/pixelbyte/scripts/pixelcam_2d.gd" id="3_pp7n8"]
 
