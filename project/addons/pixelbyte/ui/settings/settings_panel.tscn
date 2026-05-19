@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://c5kgexy2oxhl7"]
+[gd_scene format=3 uid="uid://c5kgexy2oxhl7"]
 
-[ext_resource type="Script" path="res://addons/pixelbyte/ui/settings/SettingsPanel.gd" id="4"]
+[ext_resource type="Script" uid="uid://b5suvhahqh5iv" path="res://addons/pixelbyte/ui/settings/settings_panel.gd" id="4"]
 
 [node name="SettingsPanel" type="PanelContainer" node_paths=PackedStringArray("title_label", "button_holder")]
 anchors_preset = 14
